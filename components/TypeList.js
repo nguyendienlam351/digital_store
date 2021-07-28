@@ -1,18 +1,15 @@
-/* eslint-disable jsx-a11y/alt-text */
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Image from 'next/image'; 
+import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import Container from '@material-ui/core/Container'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import Typography from '@material-ui/core/Typography'
+import Image from 'next/image'
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(1, 0, 1, 0),
+        padding:theme.spacing(0.5,0,0.5,0),
     },
     item: {
         margin: theme.spacing(1),
@@ -20,31 +17,29 @@ const useStyles = makeStyles((theme) => ({
     div: {
         backgroundColor: "#f0f0f0",
     },
-    media: {
-        height: 20,
-        width: 20,
-    }
 }));
 
-export default function TypeList() {
+export default function TypeList({ types }) {
     const classes = useStyles();
 
     return (
         <div className={classes.div}>
             <Container maxWidth="lg">
-                <Grid container className={classes.root} justifyContent="space-evenly" spacing={2}>
-                    {[0, 1, 2, 3, 4].map((value) => (
-                        <Card key={value} href="youtube.com" className={classes.item}>
-                            <CardActionArea>
-                            <Image src="/phone.png" width={30} height={30} />
-                                <CardContent>
-                                    Loại sản phẩm {value}
-                                </CardContent>
-                            </CardActionArea>
+                <Grid container className={classes.root} justifyContent="center">
+                    {types.map((type) => (
+                        <a key={type.id} href="https://youtube.com">
+                        <Card  className={classes.item}>
+                            <CardActions>
+                                <Image src={'data:image/png;base64,'+type.image} width={20} height={20} />
+                                <Typography variant="body1" component="p">
+                                {type.name}
+                                    </Typography> 
+                            </CardActions>
                         </Card>
+                        </a>
                     ))}
                 </Grid>
             </Container>
-        </div>
+        </div >
     );
 }

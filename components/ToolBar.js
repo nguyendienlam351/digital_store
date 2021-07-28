@@ -1,22 +1,20 @@
-/* eslint-disable jsx-a11y/alt-text */
-import React from 'react';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import { alpha, makeStyles } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import Container from '@material-ui/core/Container';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import Image from 'next/image'; 
-import AppBar from '@material-ui/core/AppBar'; 
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
+import InputBase from '@material-ui/core/InputBase'
+import { alpha, makeStyles } from '@material-ui/core/styles'
+import SearchIcon from '@material-ui/icons/Search'
+import Container from '@material-ui/core/Container'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import Image from 'next/image'
+import AppBar from '@material-ui/core/AppBar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   menuButton: {
-    margin: theme.spacing(0,2,0,2),
+    margin: theme.spacing(0,1,0,1),
   },
   title: {
     flexGrow: 1,
@@ -53,11 +51,10 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: { 
       width: '60ch',
       '&:focus': {
         width: '65ch',
