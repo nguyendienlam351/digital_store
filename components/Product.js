@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ProductList() {
+export default function ProductList({product}) {
     const classes = useStyles();
 
     return (
@@ -24,15 +24,14 @@ export default function ProductList() {
             <a href="https://youtube.com">
                 <CardMedia
                     className={classes.media}
-                    image="https://cdn.tgdd.vn/Products/Images/42/237603/samsung-galaxy-a22-4g-black-600x600.jpg"
-                    title="Contemplative Reptile"
+                    image={'data:image/png;base64,'+product.image}
                 />
                 <CardContent>
                     <Typography variant="subtitle1">
-                        Điện thoại Samsung Galaxy A22
+                    {product.name}
                     </Typography>
                     <Typography variant="body1" color="textSecondary">
-                        <NumberFormat value={2456981} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
+                        <NumberFormat value={product.price} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
                     </Typography>
                 </CardContent>
             </a>

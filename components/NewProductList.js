@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function NewProductList() {
+export default function NewProductList({products}) {
     const classes = useStyles();
     return (
         <Container maxWidth='md' className={classes.root}>
@@ -29,7 +29,7 @@ export default function NewProductList() {
             >
                 <Card className={classes.cart}>
                     <Typography variant="h6">
-                        Sản phẩm nổi bật
+                        Sản phẩm mới nhất
                     </Typography>
                 </Card>
                 <a href="https://youtube.com">
@@ -43,9 +43,10 @@ export default function NewProductList() {
                 container
                 spacing={1}
             >
-                {[1, 2, 3, 4, 5, 6,7,8].map((item) => (
-                    <Grid key={item} item xs={3}>
-                        <Product />
+                {
+                products.map((product) => (
+                    <Grid key={product._id} item xs={3}>
+                        <Product product={product}/>
                     </Grid>
                 ))}
             </Grid>
