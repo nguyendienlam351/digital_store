@@ -24,11 +24,11 @@ export default function TypeList({ types }) {
 
     return (
         <div className={classes.div}>
-            <Container maxWidth="lg">
-                <Grid container className={classes.root} justifyContent="center">
+            <Container maxWidth="md">
+                <Grid xs={12} container className={classes.root} justifyContent="center">
                     {types.map((type) => (
-                        <a key={type.id} href="https://youtube.com">
-                        <Card  className={classes.item}>
+                        <a key={type.id} href={type._id}>
+                        <Card className={classes.item}>
                             <CardActions>
                                 <Image src={'data:image/png;base64,'+type.image} width={20} height={20} />
                                 <Typography variant="body1" component="p">

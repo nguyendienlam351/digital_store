@@ -1,9 +1,9 @@
 import Head from 'next/head'
-import Container from '@material-ui/core/Container'
 import ToolBar from '../components/ToolBar'
 import TypeList from '../components/TypeList'
 import Type from '../models/Type'
 import dbConnect from '../lib/dbConnect'
+import NewProductList from '../components/NewProductList'
 
 const Home = ({ types }) => {
 
@@ -14,7 +14,7 @@ const Home = ({ types }) => {
       </Head>
       <ToolBar />
       <TypeList types={types} />
-      <Container maxWidth='lg'></Container>
+      <NewProductList/>
     </div>
   )
 }
