@@ -1,16 +1,15 @@
 import Head from 'next/head'
+import ToolBar from '../../../components/ToolBar'
 import { makeStyles } from '@material-ui/core/styles'
-import ToolBar from '../components/ToolBar'
+import TypeList from '../../../components/TypeList'
+import Type from '../../../models/Type'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import TypeList from '../components/TypeList'
-import Type from '../models/Type'
-import Product from '../models/Product'
-import dbConnect from '../lib/dbConnect'
-import ProductList from '../components/ProductList'
-import Link from '@material-ui/core/Link';
+import Product from '../../../models/Product'
+import dbConnect from '../../../lib/dbConnect'
+import ProductList from '../../../components/ProductList'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,13 +25,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = ({ types, products }) => {
+const Home = ({ types, products, params }) => {
   const classes = useStyles();
+  let type = types.filter((type) => {
+    return type._id === params
+  })
 
   return (
     <div>
       <Head>
-        <title>Home Page</title>
+        <title>Product Type</title>
       </Head>
       <ToolBar />
       <TypeList types={types} />
@@ -46,14 +48,9 @@ const Home = ({ types, products }) => {
         >
           <Card className={classes.cart}>
             <Typography variant="h6">
-              Sản phẩm mới nhất
+            Sản Phẩm {type[0].name}
             </Typography>
           </Card>
-          <Link component="a" href="/products" color="inherit" >
-            <Typography variant="subtitle1">
-              Tất cả sản phẩm
-            </Typography>
-          </Link>
 
         </Grid>
         <ProductList products={products} />
@@ -62,7 +59,8 @@ const Home = ({ types, products }) => {
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ params }) {
+
   await dbConnect()
 
   /* find all the data in our database */
@@ -73,15 +71,14 @@ export async function getServerSideProps() {
     return type
   })
 
-  const resultProduct = await Product.find({}).sort({ _id: -1 }).limit(8)
+  const resultProduct = await Product.find({ type: params.id }).limit(8)
   const products = resultProduct.map((doc) => {
     const product = doc.toObject()
     product._id = product._id.toString()
     return product
   })
 
-
-  return { props: { types: types, products: products } }
+  return { props: { types: types, products: products, params: params.id } }
 }
 
 export default Home

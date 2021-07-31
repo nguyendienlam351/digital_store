@@ -16,19 +16,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ProductList({product}) {
+export default function ProductList({ product }) {
     const classes = useStyles();
 
     return (
-        <Card className={classes.root} alignItems="center">
+        <Card className={classes.root}>
             <a href="https://youtube.com">
                 <CardMedia
                     className={classes.media}
-                    image={'data:image/png;base64,'+product.image}
+                    image={'data:image/png;base64,' + product.image}
                 />
                 <CardContent>
                     <Typography variant="subtitle1">
-                    {product.name}
+                        {product.name}
                     </Typography>
                     <Typography variant="body1" color="textSecondary">
                         <NumberFormat value={product.price} displayType={'text'} thousandSeparator={true} suffix={' đ'} />

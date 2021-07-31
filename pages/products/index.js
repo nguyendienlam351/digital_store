@@ -1,16 +1,15 @@
 import Head from 'next/head'
 import { makeStyles } from '@material-ui/core/styles'
-import ToolBar from '../components/ToolBar'
+import ToolBar from '../../components/ToolBar'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import TypeList from '../components/TypeList'
-import Type from '../models/Type'
-import Product from '../models/Product'
-import dbConnect from '../lib/dbConnect'
-import ProductList from '../components/ProductList'
-import Link from '@material-ui/core/Link';
+import TypeList from '../../components/TypeList'
+import Type from '../../models/Type'
+import Product from '../../models/Product'
+import dbConnect from '../../lib/dbConnect'
+import ProductList from '../../components/ProductList'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +31,7 @@ const Home = ({ types, products }) => {
   return (
     <div>
       <Head>
-        <title>Home Page</title>
+        <title>All Product</title>
       </Head>
       <ToolBar />
       <TypeList types={types} />
@@ -46,14 +45,9 @@ const Home = ({ types, products }) => {
         >
           <Card className={classes.cart}>
             <Typography variant="h6">
-              Sản phẩm mới nhất
-            </Typography>
-          </Card>
-          <Link component="a" href="/products" color="inherit" >
-            <Typography variant="subtitle1">
               Tất cả sản phẩm
             </Typography>
-          </Link>
+          </Card>
 
         </Grid>
         <ProductList products={products} />

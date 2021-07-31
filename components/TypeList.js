@@ -5,11 +5,12 @@ import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
 import Image from 'next/image'
+import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        padding:theme.spacing(0.5,0,0.5,0),
+        padding: theme.spacing(0.5, 0, 0.5, 0),
     },
     item: {
         margin: theme.spacing(1),
@@ -25,18 +26,18 @@ export default function TypeList({ types }) {
     return (
         <div className={classes.div}>
             <Container maxWidth="md">
-                <Grid xs={12} container className={classes.root} justifyContent="center">
+                <Grid xs={12} container className={classes.root} justifyContent="center" item>
                     {types.map((type) => (
-                        <a key={type.id} href={type._id}>
-                        <Card className={classes.item}>
-                            <CardActions>
-                                <Image src={'data:image/png;base64,'+type.image} width={20} height={20} />
-                                <Typography variant="body1" component="p">
-                                {type.name}
-                                    </Typography> 
-                            </CardActions>
-                        </Card>
-                        </a>
+                        <Link component="a" key={type._id} href={"/products/type/" + type._id}>
+                            <Card className={classes.item}>
+                                <CardActions>
+                                    <Image src={'data:image/png;base64,' + type.image} width={20} height={20} />
+                                    <Typography variant="body1" component="p">
+                                        {type.name}
+                                    </Typography>
+                                </CardActions>
+                            </Card>
+                        </Link>
                     ))}
                 </Grid>
             </Container>

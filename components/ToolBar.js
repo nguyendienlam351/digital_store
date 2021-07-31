@@ -8,6 +8,7 @@ import Container from '@material-ui/core/Container'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Image from 'next/image'
 import AppBar from '@material-ui/core/AppBar'
+import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,15 +72,19 @@ export default function ToolBar() {
       <AppBar position="static">
       <Container maxWidth="lg">
         <Toolbar>
+          <Link component="a" href="/" color="inherit" >
           <IconButton
             className={classes.menuButton}
             color="inherit"
           >
             <Image src="/favicon.ico" width={20} height={20} />
           </IconButton>
+          </Link>
+          <Link component="a" href="/" color="inherit" >
           <Typography className={classes.title} variant="h6" noWrap>
             Digital Store
           </Typography>
+          </Link>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
