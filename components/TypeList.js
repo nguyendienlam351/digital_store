@@ -28,10 +28,10 @@ export default function TypeList({ types }) {
             <Container maxWidth="md">
                 <Grid xs={12} container className={classes.root} justifyContent="center" item>
                     {types.map((type) => (
-                        <Link component="a" key={type._id} href={"/products/type/" + type._id}>
+                        <Link component="a" key={type._id} href={"/type/" + type._id}>
                             <Card className={classes.item}>
                                 <CardActions>
-                                    <Image src={'data:image/png;base64,' + type.image} width={20} height={20} />
+                                    <Image alt="Picture of the tpye" src={'data:image/png;base64,' + type.image} width={20} height={20} />
                                     <Typography variant="body1" component="p">
                                         {type.name}
                                     </Typography>

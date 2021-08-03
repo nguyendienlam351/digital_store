@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = ({ types, products }) => {
+const Products = ({ types, products }) => {
   const classes = useStyles();
 
   return (
@@ -78,4 +78,4 @@ export async function getServerSideProps() {
   return { props: { types: types, products: products } }
 }
 
-export default Home
+export default Products

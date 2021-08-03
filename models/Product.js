@@ -18,6 +18,13 @@ const ProductSchema = new mongoose.Schema({
     required: [true, 'Please provide a name for this product.'],
     maxlength: [24, 'Name cannot be more than 60 characters'],
   },
+  description: {
+    type: String,
+    required: [true, 'Please provide a name for this product.'],
+  },
+  quantity: {
+    type: Number,
+  },
 })
 
 export default mongoose.models.Product || mongoose.model('Product', ProductSchema)

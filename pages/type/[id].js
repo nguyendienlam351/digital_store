@@ -1,15 +1,15 @@
 import Head from 'next/head'
-import ToolBar from '../../../components/ToolBar'
+import ToolBar from '../../components/ToolBar'
 import { makeStyles } from '@material-ui/core/styles'
-import TypeList from '../../../components/TypeList'
-import Type from '../../../models/Type'
+import TypeList from '../../components/TypeList'
+import Type from '../../models/Type'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import Product from '../../../models/Product'
-import dbConnect from '../../../lib/dbConnect'
-import ProductList from '../../../components/ProductList'
+import Product from '../../models/Product'
+import dbConnect from '../../lib/dbConnect'
+import ProductList from '../../components/ProductList'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = ({ types, products, params }) => {
+const TypeProducts = ({ types, products, params }) => {
   const classes = useStyles();
   let type = types.filter((type) => {
     return type._id === params
@@ -81,4 +81,4 @@ export async function getServerSideProps({ params }) {
   return { props: { types: types, products: products, params: params.id } }
 }
 
-export default Home
+export default TypeProducts

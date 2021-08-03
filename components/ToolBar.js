@@ -69,22 +69,22 @@ export default function ToolBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static"> 
       <Container maxWidth="lg">
         <Toolbar>
-          <Link component="a" href="/" color="inherit" >
           <IconButton
             className={classes.menuButton}
             color="inherit"
           >
-            <Image src="/favicon.ico" width={20} height={20} />
-          </IconButton>
-          </Link>
           <Link component="a" href="/" color="inherit" >
-          <Typography className={classes.title} variant="h6" noWrap>
-            Digital Store
-          </Typography>
+            <Image alt="logo" src="/favicon.ico" width={20} height={20} />
           </Link>
+          </IconButton>
+          <Typography className={classes.title} variant="h6" noWrap>
+          <Link component="a" href="/" color="inherit" >
+            Digital Store
+            </Link>
+          </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

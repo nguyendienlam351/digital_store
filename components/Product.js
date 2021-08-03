@@ -5,6 +5,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import NumberFormat from 'react-number-format';
+import Link from 'next/Link';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,7 +22,8 @@ export default function ProductList({ product }) {
 
     return (
         <Card className={classes.root}>
-            <a href="https://youtube.com">
+            <Link href="/products/[id]" as={`/products/${product._id}`}>
+                <a>
                 <CardMedia
                     className={classes.media}
                     image={'data:image/png;base64,' + product.image}
@@ -34,7 +36,8 @@ export default function ProductList({ product }) {
                         <NumberFormat value={product.price} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
                     </Typography>
                 </CardContent>
-            </a>
+                </a>
+            </Link>
         </Card>
     );
 }
