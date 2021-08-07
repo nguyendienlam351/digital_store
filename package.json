@@ -10,14 +10,17 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.12.2",
+    "@material-ui/data-grid": "^4.0.0-alpha.35",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/styles": "^4.11.4",
     "mongoose": "^5.13.3",
     "next": "11.0.1",
+    "notistack": "^1.0.10",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-number-format": "^4.6.4"
+    "react-number-format": "^4.6.4",
+    "swr": "^0.5.6"
   },
   "devDependencies": {
     "eslint": "7.31.0",

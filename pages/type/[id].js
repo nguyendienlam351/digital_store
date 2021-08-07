@@ -27,9 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TypeProducts = ({ types, products, params }) => {
   const classes = useStyles();
-  let type = types.filter((type) => {
-    return type._id === params
-  })
+  let type = types.find(item => item._id === params);
 
   return (
     <div>
@@ -48,7 +46,7 @@ const TypeProducts = ({ types, products, params }) => {
         >
           <Card className={classes.cart}>
             <Typography variant="h6">
-            Sản Phẩm {type[0].name}
+            Sản Phẩm {type.name}
             </Typography>
           </Card>
 

@@ -52,7 +52,7 @@ export default function DetailProduct({ type, product }) {
                 direction="row"
             >
                 <Grid item xs={5} >
-                    <Image alt="product image" src={'data:image/png;base64,' + product.image} width={320} height={320} />
+                    <Image alt="product image" src={product.image} width={320} height={320} />
                 </Grid>
                 <Grid item xs={7} >
                     <Typography className={classes.gridItem} variant="h6">

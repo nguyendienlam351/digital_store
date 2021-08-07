@@ -26,7 +26,7 @@ export default function ProductList({ product }) {
                 <a>
                 <CardMedia
                     className={classes.media}
-                    image={'data:image/png;base64,' + product.image}
+                    image={product.image}
                 />
                 <CardContent>
                     <Typography variant="subtitle1">

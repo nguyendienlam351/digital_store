@@ -80,7 +80,6 @@ export async function getServerSideProps() {
     return product
   })
 
-
   return { props: { types: types, products: products } }
 }
 

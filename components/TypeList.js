@@ -31,7 +31,7 @@ export default function TypeList({ types }) {
                         <Link component="a" key={type._id} href={"/type/" + type._id}>
                             <Card className={classes.item}>
                                 <CardActions>
-                                    <Image alt="Picture of the tpye" src={'data:image/png;base64,' + type.image} width={20} height={20} />
+                                    <Image alt="Picture of the tpye" src={type.image} width={20} height={20} />
                                     <Typography variant="body1" component="p">
                                         {type.name}
                                     </Typography>
