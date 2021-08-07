@@ -92,7 +92,7 @@ export default function ProductForm({ types, product, isNew }) {
 
             router.push('/admin/products')
         } catch (error) {
-            setErrors('Failed to update pet')
+            setErrors('Failed to update product')
         }
     }
 
@@ -114,7 +114,7 @@ export default function ProductForm({ types, product, isNew }) {
 
             router.push('/admin/products')
         } catch (error) {
-            setErrors('Failed to add pet')
+            setErrors('Failed to add product')
         }
     }
 
