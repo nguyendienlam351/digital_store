@@ -4,7 +4,7 @@ const ProductSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please provide a name for this product.'],
-    maxlength: [20, 'Name cannot be more than 60 characters'],
+    maxlength: [60, 'Name cannot be more than 60 characters'],
   },
   image: {
     type: String,
@@ -12,11 +12,12 @@ const ProductSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
+    required: [true, 'Please provide a price for this product.'],
   },
   type: {
     type: String,
-    required: [true, 'Please provide a name for this product.'],
-    maxlength: [24, 'Name cannot be more than 60 characters'],
+    required: [true, 'Please provide a type for this product.'],
+    maxlength: [30, 'Name cannot be more than 30 characters'],
   },
   description: {
     type: String,
@@ -24,6 +25,7 @@ const ProductSchema = new mongoose.Schema({
   },
   quantity: {
     type: Number,
+    required: [true, 'Please provide a quantity for this product.'],
   },
 })
 

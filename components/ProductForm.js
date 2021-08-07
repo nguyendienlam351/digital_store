@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid';
 import Image from 'next/image'
 import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -152,7 +153,7 @@ export default function ProductForm({ types, product, isNew }) {
 
     const handleClose = () => {
         setErrors('')
-      };
+    };
 
     return (
         <Container maxWidth="md" className={classes.root}>
@@ -183,6 +184,7 @@ export default function ProductForm({ types, product, isNew }) {
                     <TextField
                         className={classes.textField}
                         variant="outlined"
+                        label="Tên sản phẩm"
                         placeholder="Nhập tên sản phẩm"
                         value={form.name}
                         name="name"
@@ -191,6 +193,7 @@ export default function ProductForm({ types, product, isNew }) {
                     <TextField
                         className={classes.textField}
                         variant="outlined"
+                        label="Giá sản phẩm"
                         placeholder="Nhập giá sản phẩm"
                         type="number"
                         value={form.price}
@@ -200,6 +203,7 @@ export default function ProductForm({ types, product, isNew }) {
                     <TextField
                         className={classes.textField}
                         variant="outlined"
+                        label="Số lượng sản phẩm"
                         placeholder="Nhập số lượng"
                         type="number"
                         value={form.quantity}
@@ -207,10 +211,12 @@ export default function ProductForm({ types, product, isNew }) {
                         onChange={handleChange}
                     />
                     <FormControl variant="outlined" className={classes.textField}>
+                        <InputLabel>Loại sản phẩm</InputLabel>
                         <Select
                             value={form.type}
                             name="type"
                             onChange={handleChange}
+                            labelWidth={110}
                         >
                             {types.map((type) => (
                                 <MenuItem key={type._id} value={type._id}>
@@ -242,17 +248,17 @@ export default function ProductForm({ types, product, isNew }) {
                 <Button onClick={() => { router.push('/admin/products') }} variant="contained" color="secondary">
                     Hủy
                 </Button>
-                    <Button onClick={() => { handleSubmit() }}
-                        variant="contained" color="primary">
-                        {isNew ? "Thêm mới" : "Thay đổi"}
-                    </Button>
+                <Button onClick={() => { handleSubmit() }}
+                    variant="contained" color="primary">
+                    {isNew ? "Thêm mới" : "Thay đổi"}
+                </Button>
             </Grid>
-            
-      <Snackbar anchorOrigin={{vertical: 'top',horizontal: 'center',}} open={errors} autoHideDuration={6000} onClose={handleClose}>
-        <Alert severity="error">
-          {errors}
-        </Alert>
-      </Snackbar>
+
+            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center', }} open={errors} autoHideDuration={6000} onClose={handleClose}>
+                <Alert severity="error">
+                    {errors}
+                </Alert>
+            </Snackbar>
         </Container >
     )
 }
