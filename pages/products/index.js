@@ -67,7 +67,7 @@ export async function getServerSideProps() {
     return type
   })
 
-  const resultProduct = await Product.find({}).sort({ _id: -1 }).limit(8)
+  const resultProduct = await Product.find({}).sort({ _id: -1 })
   const products = resultProduct.map((doc) => {
     const product = doc.toObject()
     product._id = product._id.toString()
