@@ -12,7 +12,7 @@ export default function Edit_Product({ types, product }) {
         <Head>
           <title>Edit Product</title>
         </Head>
-        <AdToolBar />
+        <AdToolBar select="Quản lý sản phẩm" />
             <ProductForm types={types} product={product} isNew={false}/>
         </div>
     )
