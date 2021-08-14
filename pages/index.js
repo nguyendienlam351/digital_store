@@ -6,11 +6,9 @@ import Card from '@material-ui/core/Card'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import TypeList from '../components/TypeList'
-import Type from '../models/Type'
-import Product from '../models/Product'
-import dbConnect from '../lib/dbConnect'
 import ProductList from '../components/ProductList'
 import Link from '@material-ui/core/Link';
+import { getData } from '../lib/fetchData'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,24 +61,18 @@ const Home = ({ types, products }) => {
 }
 
 export async function getServerSideProps() {
-  await dbConnect()
+  const resultType = await getData('types')
 
-  /* find all the data in our database */
-  const resultType = await Type.find({})
-  const types = resultType.map((doc) => {
-    const type = doc.toObject()
-    type._id = type._id.toString()
-    return type
-  })
+  const resultProduct = await getData(
+    `products?limit=8`
+  )
 
-  const resultProduct = await Product.find({}).sort({ _id: -1 }).limit(8)
-  const products = resultProduct.map((doc) => {
-    const product = doc.toObject()
-    product._id = product._id.toString()
-    return product
-  })
-
-  return { props: { types: types, products: products } }
+  return {
+    props: {
+      types: resultType.types,
+      products: resultProduct.products,
+    }
+  }
 }
 
 export default Home
