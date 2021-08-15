@@ -32,14 +32,23 @@ const Products = (props) => {
   const router = useRouter()
   const [products, setProducts] = useState(props.products)
   const [page, setPage] = useState(1)
+  const [title, setTitle] = useState('')
 
   useEffect(() => {
     setProducts(props.products)
-  }, [props.products])
-
-  useEffect(() => {
     if (Object.keys(router.query).length === 0) setPage(1)
-  }, [router.query])
+
+    if(props.search !=='all') {
+      setTitle(`Từ khóa tìm kiếm: ${props.search}`)
+    }
+    else if(props.type !=='all') {
+      const nameType = props.types.find(item => item._id === props.type);
+      setTitle(nameType ? `Sản phẩm ${nameType.name}` : '')
+    }
+    else {
+      setTitle('Tất cả sản phẩm')
+    }
+  }, [props,router.query])
 
   const handleLoadmore = () => {
     setPage(page + 1)
@@ -51,8 +60,8 @@ const Products = (props) => {
       <Head>
         <title>All Product</title>
       </Head>
-      <ToolBar />
-      <TypeList types={props.types} />
+      <ToolBar isAll={true} srch={props.search}/>
+      <TypeList types={props.types} isAll={true}/>
       <Container maxWidth='md' className={classes.root}>
         <Grid
           container
@@ -63,20 +72,23 @@ const Products = (props) => {
         >
           <Card className={classes.cart}>
             <Typography variant="h6">
-              Tất cả sản phẩm
+              {title}
             </Typography>
           </Card>
 
         </Grid>
         <ProductList products={products} />
-        { props.length < page*8 ? "" :
+        {props.length < page * 8 ? null :
           <Grid
             container
             direction="row"
             justifyContent="center"
             className={classes.grid}
           >
-            <Button onClick={() => handleLoadmore()} variant="outlined" color="primary">
+            <Button
+              onClick={() => handleLoadmore()}
+              variant="outlined"
+              color="primary">
               Xem thêm
             </Button>
           </Grid>
@@ -88,18 +100,22 @@ const Products = (props) => {
 
 export async function getServerSideProps({ query }) {
   const page = query.page || 1
+  const type = query.type || 'all'
+  const search = query.search || 'all'
 
   const resultType = await getData('types')
 
   const resultProduct = await getData(
-    `products?limit=${page * 8}`
+    `products?limit=${page * 8}&type=${type}&name=${search}`
   )
 
   return {
     props: {
       types: resultType.types,
       products: resultProduct.products,
-      length: resultProduct.length
+      length: resultProduct.length,
+      type: type,
+      search: search
     }
   }
 }

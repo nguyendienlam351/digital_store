@@ -10,9 +10,13 @@ export default async function handler(req, res) {
     case 'GET':
       try {
         const types = await Type.find({}).limit(8) /* find all the data in our database */
-        res.status(200).json({ success: true, data: types })
+        res.json({ 
+          status: 'success',
+          length: types.length,
+          types 
+        })
       } catch (error) {
-        res.status(400).json({ success: false })
+        return res.status(500).json({ error: error.message })
       }
       break
     case 'POST':

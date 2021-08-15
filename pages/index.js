@@ -9,6 +9,7 @@ import TypeList from '../components/TypeList'
 import ProductList from '../components/ProductList'
 import Link from '@material-ui/core/Link';
 import { getData } from '../lib/fetchData'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = ({ types, products }) => {
   const classes = useStyles();
+  const router = useRouter()
 
   return (
     <div>
@@ -47,7 +49,7 @@ const Home = ({ types, products }) => {
               Sản phẩm mới nhất
             </Typography>
           </Card>
-          <Link component="a" href="/products" color="inherit" >
+          <Link component="a" color="inherit" onClick={()=> router.push('/products')}>
             <Typography variant="subtitle1">
               Tất cả sản phẩm
             </Typography>
@@ -61,12 +63,11 @@ const Home = ({ types, products }) => {
 }
 
 export async function getServerSideProps() {
+
   const resultType = await getData('types')
 
-  const resultProduct = await getData(
-    `products?limit=8`
-  )
-
+  const resultProduct = await getData('products?limit=8&type=all&name=all')
+  
   return {
     props: {
       types: resultType.types,

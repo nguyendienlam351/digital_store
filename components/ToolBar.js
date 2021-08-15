@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
@@ -8,14 +9,17 @@ import Container from '@material-ui/core/Container'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Image from 'next/image'
 import AppBar from '@material-ui/core/AppBar'
-import Link from '@material-ui/core/Link';
+import filterSearch from '../lib/filterSearch'
+import { useRouter } from 'next/router'
+import InputAdornment from '@material-ui/core/InputAdornment';
+import ClearIcon from '@material-ui/icons/Clear';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   menuButton: {
-    margin: theme.spacing(0,1,0,1),
+    margin: theme.spacing(0, 1, 0, 1),
   },
   title: {
     flexGrow: 1,
@@ -55,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
-    [theme.breakpoints.up('sm')]: { 
+    [theme.breakpoints.up('sm')]: {
       width: '60ch',
       '&:focus': {
         width: '65ch',
@@ -64,47 +68,69 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ToolBar() {
+export default function ToolBar({isAll,srch}) {
   const classes = useStyles();
+  const router = useRouter()
+  const [search, setSearch] = useState(srch == null || srch == 'all' ? '' : srch)
+
+  useEffect(() => {
+    if(search !== '' || isAll){
+    router.pathname = 'products/'
+    filterSearch({router, search: search ? search.toLowerCase() : 'all'})}
+},[search])
 
   return (
     <div className={classes.root}>
-      <AppBar position="static"> 
-      <Container maxWidth="lg">
-        <Toolbar>
-          <IconButton
-            className={classes.menuButton}
-            color="inherit"
-          >
-          <Link component="a" href="/" color="inherit" >
-            <Image alt="logo" src="/favicon.ico" width={20} height={20} />
-          </Link>
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-          <Link component="a" href="/" color="inherit" >
-            Digital Store
-            </Link>
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+      <AppBar position="static">
+        <Container maxWidth="lg">
+          <Toolbar>
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              onClick={()=>router.push('/')}
+            >
+                <Image alt="logo" src="/favicon.ico" width={20} height={20} />
+            </IconButton>
+            <Typography className={classes.title} variant="h6" noWrap  onClick={()=>router.push('/')}>
+                Digital Store
+            </Typography>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+                value={search}
+                onChange={e => {
+                  setSearch(e.target.value)
+                }}
+                endAdornment={
+                  !search ? null :
+                    <InputAdornment position="end">
+                      <IconButton
+                        className={classes.menuButton}
+                        edge="end"
+                        onClick={() => setSearch('')}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                }
+              />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <IconButton
-            className={classes.menuButton}
-            color="inherit"
-          >
-            <ShoppingCartIcon />
-          </IconButton>
-        </Toolbar>  
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              onClick={()=>router.push('/cart')}
+            >
+              <ShoppingCartIcon />
+            </IconButton>
+          </Toolbar>
         </Container>
       </AppBar>
     </div>

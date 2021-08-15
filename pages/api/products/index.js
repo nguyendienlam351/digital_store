@@ -9,11 +9,11 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        const features = new APIfeatures(Product.find().sort({ _id: -1 }), req.query).paginating()
+        const features = new APIfeatures(Product.find().sort({ _id: -1 }), req.query).filtering().paginating()
 
         const products = await features.query
 
-        res.json({ 
+        res.json({
           status: 'success',
           products,
           length: products.length
@@ -39,16 +39,29 @@ export default async function handler(req, res) {
 }
 
 class APIfeatures {
-  constructor(query, queryString){
-      this.query = query;
-      this.queryString = queryString;
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
   }
 
-  paginating(){
-      const page = this.queryString.page * 1 || 1
-      const limit = this.queryString.limit * 1 || 8
-      const skip = (page - 1) * limit;
-      this.query = this.query.skip(skip).limit(limit)
-      return this;
+  paginating() {
+    const page = this.queryString.page * 1 || 1
+    const limit = this.queryString.limit * 1 || 8
+    const skip = (page - 1) * limit;
+    this.query = this.query.skip(skip).limit(limit)
+    return this;
+  }
+
+  filtering() {
+    const queryObj = { ...this.queryString }
+
+    if (queryObj.type !== 'all')
+      this.query.find({ type: queryObj.type })
+
+    if (queryObj.name !== 'all')
+      this.query.find({ name: { $regex: queryObj.name } })
+
+    this.query.find()
+    return this;
   }
 }
