@@ -10,6 +10,9 @@ import Paper from '@material-ui/core/Paper';
 import NumberFormat from 'react-number-format';
 
 const useStyles = makeStyles(() => ({
+    container: {
+        maxHeight: 600,
+    },
     table: {
         minWidth: 650,
     },
@@ -23,8 +26,8 @@ export default function BillDetailTable({ product }) {
     const classes = useStyles();
 
     return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
+        <TableContainer component={Paper} className={classes.container}>
+            <Table stickyHeader className={classes.table} aria-label="simple table">
                 <TableHead >
                     <TableRow>
                         <TableCell className={classes.head}>Tên sản phẩm</TableCell>
@@ -36,7 +39,7 @@ export default function BillDetailTable({ product }) {
                 </TableHead>
                 <TableBody>
                     {product.map((row) => (
-                        <TableRow key={row._id}>
+                        <TableRow hover key={row._id}>
                             <TableCell component="th" scope="row">
                                 {row.name}
                             </TableCell>
@@ -45,7 +48,7 @@ export default function BillDetailTable({ product }) {
                                 <NumberFormat value={row.price} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
                             </TableCell>
                             <TableCell align="right">
-                                <NumberFormat value={ row.price*row.quantity } displayType={'text'} thousandSeparator={true} suffix={' đ'} />
+                                <NumberFormat value={row.price * row.quantity} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
                             </TableCell>
                         </TableRow>
                     ))}

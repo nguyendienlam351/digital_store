@@ -1,4 +1,3 @@
-import React, {useState} from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table';
@@ -12,8 +11,13 @@ import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NumberFormat from 'react-number-format';
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
+    container: {
+        maxHeight: 600,
+    },
     table: {
         minWidth: 650,
     },
@@ -23,28 +27,28 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function ProductTable({ products }) {
+export default function ProductTable({ products, handleLoadmore, length, page }) {
     const router = useRouter()
     const classes = useStyles();
 
     const handleDelete = async (id) => {
         try {
-          await fetch(`/api/products/${id}`, {
-            method: 'Delete',
-          })
-          router.push('/admin/products/')
+            await fetch(`/api/products/${id}`, {
+                method: 'Delete',
+            })
+            router.push('/admin/products/')
         } catch (error) {
-          console.log('Failed to delete the pet.')
+            console.log('Failed to delete the pet.')
         }
-      }
-    
-      const handleEdit = (id) => {
-          router.push(`/admin/products/${id}`)
-      }
+    }
+
+    const handleEdit = (id) => {
+        router.push(`/admin/products/${id}`)
+    }
 
     return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
+        <TableContainer component={Paper} className={classes.container} >
+            <Table stickyHeader className={classes.table} aria-label="sticky table">
                 <TableHead >
                     <TableRow>
                         <TableCell className={classes.head}>Tên sản phẩm</TableCell>
@@ -57,7 +61,7 @@ export default function ProductTable({ products }) {
                 </TableHead>
                 <TableBody>
                     {products.map((row) => (
-                        <TableRow key={row._id}>
+                        <TableRow hover key={row._id}>
                             <TableCell component="th" scope="row">
                                 {row.name}
                             </TableCell>
@@ -69,7 +73,7 @@ export default function ProductTable({ products }) {
                             <TableCell align="center">
                                 <IconButton
                                     color="inherit"
-                                    onClick={()=>{handleEdit(row._id)}}
+                                    onClick={() => { handleEdit(row._id) }}
                                 >
                                     <EditIcon />
                                 </IconButton>
@@ -77,7 +81,7 @@ export default function ProductTable({ products }) {
                             <TableCell align="center">
                                 <IconButton
                                     color="inherit"
-                                    onClick={()=>{handleDelete(row._id)}}
+                                    onClick={() => { handleDelete(row._id) }}
                                 >
                                     <DeleteIcon />
                                 </IconButton>
@@ -85,6 +89,22 @@ export default function ProductTable({ products }) {
                         </TableRow>
                     ))}
                 </TableBody>
+                {length < page * 8 ? null :
+                    <caption >
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                        >
+                            <Button
+                                onClick={() => handleLoadmore()}
+                                variant="outlined"
+                                color="primary">
+                                Xem thêm
+                            </Button>
+                        </Grid>
+                    </caption>
+                }
             </Table>
         </TableContainer>
     )

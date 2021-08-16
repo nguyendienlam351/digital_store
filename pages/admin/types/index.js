@@ -1,8 +1,8 @@
 import Head from 'next/head'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import Type from '../../../models/Type'
-import dbConnect from '../../../lib/dbConnect'
+import { getData } from '../../../lib/fetchData'
+import filterSearch from '../../../lib/filterSearch'
 import TypeTable from '../../../components/TypeTable'
 import TypeForm from '../../../components/TypeForm'
 import { makeStyles } from '@material-ui/core/styles'
@@ -14,6 +14,9 @@ import InputBase from '@material-ui/core/InputBase'
 import SearchIcon from '@material-ui/icons/Search'
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import ClearIcon from '@material-ui/icons/Clear';
+import IconButton from '@material-ui/core/IconButton'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,15 +63,34 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Index = ({ types }) => {
+const Index = (props) => {
     const router = useRouter()
     const classes = useStyles();
     const [errors, setErrors] = useState('')
+    const [types, setTypes] = useState(props.types)
+    const [search, setSearch] = useState('')
+    const [page, setPage] = useState(1)
     const [id, setId] = useState('')
     const [form, setForm] = useState({
         name: '',
         image: ''
     })
+
+    useEffect(() => {
+        setTypes(props.types)
+
+        if (Object.keys(router.query).length === 0) setPage(1)
+
+    }, [router.query, props.types])
+
+    useEffect(() => {
+        filterSearch({ router, search: search ? search.toLowerCase() : 'all' })
+    }, [search])
+
+    const handleLoadmore = () => {
+        setPage(page + 1)
+        filterSearch({ router, page: page + 1 })
+    }
 
     const handleSelect = (type) => {
         setId(type._id)
@@ -118,6 +140,20 @@ const Index = ({ types }) => {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
+                            value={search.toLowerCase()}
+                            onChange={e => setSearch(e.target.value)}
+                            endAdornment={
+                                !search ? null :
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            className={classes.menuButton}
+                                            edge="end"
+                                            onClick={() => setSearch('')}
+                                        >
+                                            <ClearIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                            }
                         />
                     </div>
                 </Grid>
@@ -130,7 +166,10 @@ const Index = ({ types }) => {
                         <TypeTable
                             types={types}
                             handleSelect={handleSelect}
-                            setErrors={setErrors} />
+                            setErrors={setErrors}
+                            handleLoadmore={handleLoadmore}
+                            page={page}
+                            length={props.length} />
                     </Grid>
                     <Grid item xs={5}>
                         <TypeForm
@@ -143,7 +182,11 @@ const Index = ({ types }) => {
                 </Grid>
             </Container>
 
-            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center', }} open={errors} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'center', }}
+                open={errors}
+                autoHideDuration={6000}
+                onClose={handleClose}>
                 <Alert severity="error">
                     {errors}
                 </Alert>
@@ -152,18 +195,20 @@ const Index = ({ types }) => {
     )
 }
 
-export async function getServerSideProps() {
-    await dbConnect()
+export async function getServerSideProps({ query }) {
+    const page = query.page || 1
+    const search = query.search || 'all'
 
-    /* find all the data in our database */
-    const resultType = await Type.find({}).sort({ _id: -1 })
-    const types = resultType.map((doc) => {
-        const type = doc.toObject()
-        type._id = type._id.toString()
-        return type
-    })
+    const resultType = await getData(
+        `types?limit=${page * 8}&name=${search}`
+    )
 
-    return { props: { types: types } }
+    return {
+        props: {
+            types: resultType.types,
+            length: resultType.length,
+        }
+    }
 }
 
 export default Index

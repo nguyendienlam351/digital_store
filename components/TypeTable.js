@@ -12,8 +12,13 @@ import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Image from 'next/image'
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(() => ({
+    container: {
+        maxHeight: 600,
+    },
     table: {
         minWidth: 650,
     },
@@ -23,7 +28,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-export default function ProductTable({ types, handleSelect, setErrors }) {
+export default function ProductTable(props) {
     const router = useRouter()
     const classes = useStyles();
 
@@ -34,13 +39,13 @@ export default function ProductTable({ types, handleSelect, setErrors }) {
             })
             router.push('/admin/types/')
         } catch (error) {
-            setErrors('Failed to delete the types.')
+            props.setErrors('Failed to delete the types.')
         }
     }
 
     return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
+        <TableContainer component={Paper} className={classes.container}>
+            <Table stickyHeader className={classes.table} aria-label="simple table">
                 <TableHead >
                     <TableRow>
                         <TableCell className={classes.head}>Loại sản phẩm</TableCell>
@@ -50,8 +55,8 @@ export default function ProductTable({ types, handleSelect, setErrors }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {types.map((row) => (
-                        <TableRow key={row._id}>
+                    {props.types.map((row) => (
+                        <TableRow hover key={row._id}>
                             <TableCell component="th" scope="row">
                                 {row.name}
                             </TableCell>
@@ -61,7 +66,7 @@ export default function ProductTable({ types, handleSelect, setErrors }) {
                             <TableCell align="right">
                                 <IconButton
                                     color="inherit"
-                                    onClick={() => { handleSelect(row) }}
+                                    onClick={() => { props.handleSelect(row) }}
                                 >
                                     <EditIcon />
                                 </IconButton>
@@ -77,6 +82,22 @@ export default function ProductTable({ types, handleSelect, setErrors }) {
                         </TableRow>
                     ))}
                 </TableBody>
+                {props.length < props.page * 8 ? null :
+                    <caption >
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                        >
+                            <Button
+                                onClick={() => props.handleLoadmore()}
+                                variant="outlined"
+                                color="primary">
+                                Xem thêm
+                            </Button>
+                        </Grid>
+                    </caption>
+                }
             </Table>
         </TableContainer>
     )

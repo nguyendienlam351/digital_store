@@ -9,7 +9,10 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        const types = await Type.find({}).limit(8) /* find all the data in our database */
+        const features = new APIfeatures(Type.find(), req.query).filtering().paginating()
+
+        const types = await features.query
+
         res.json({ 
           status: 'success',
           length: types.length,
@@ -32,5 +35,35 @@ export default async function handler(req, res) {
     default:
       res.status(400).json({ success: false })
       break
+  }
+}
+
+class APIfeatures {
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
+  }
+
+  paginating() {
+    if (this.queryString.limit == 'all') {return this}
+
+    const page = this.queryString.page * 1 || 1
+    const limit = this.queryString.limit * 1 || 8
+    const skip = (page - 1) * limit;
+    this.query = this.query.sort({ _id: -1 }).skip(skip).limit(limit)
+    return this;
+  }
+
+  filtering() {
+    const queryObj = { ...this.queryString }
+    
+    const excludeFields = ['page', 'limit']
+    excludeFields.forEach(el => delete(queryObj[el]))
+    
+    if (queryObj.name !== 'all')
+      this.query.find({ name: { $regex: queryObj.name } })
+
+    this.query.find()
+    return this;
   }
 }

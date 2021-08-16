@@ -64,7 +64,7 @@ const Home = ({ types, products }) => {
 
 export async function getServerSideProps() {
 
-  const resultType = await getData('types')
+  const resultType = await getData('types?limit=all&name=all')
 
   const resultProduct = await getData('products?limit=8&type=all&name=all')
   

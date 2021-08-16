@@ -6,7 +6,6 @@ import CardMedia from '@material-ui/core/CardMedia'
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography'
 import NumberFormat from 'react-number-format';
-import Link from '@material-ui/core/Link';
 import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({

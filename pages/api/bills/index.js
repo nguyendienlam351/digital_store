@@ -1,5 +1,5 @@
 import dbConnect from '../../../lib/dbConnect'
-import Product from '../../../models/Product'
+import Bill from '../../../models/Bill'
 
 export default async function handler(req, res) {
   const { method } = req
@@ -9,14 +9,14 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        const features = new APIfeatures(Product.find().sort({ _id: -1 }), req.query).filtering().paginating()
+        const features = new APIfeatures(Bill.find(), req.query).filtering().paginating()
 
-        const products = await features.query
+        const bills = await features.query
 
-        res.json({
+        res.json({ 
           status: 'success',
-          products,
-          length: products.length
+          length: bills.length,
+          bills
         })
       } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -24,10 +24,10 @@ export default async function handler(req, res) {
       break
     case 'POST':
       try {
-        const product = await Product.create(
+        const bill = await Bill.create(
           req.body
         ) /* create a new model in the database */
-        res.status(201).json({ success: true, data: product })
+        res.status(201).json({ success: true, data: bill })
       } catch (error) {
         res.status(400).json({ success: false })
       }
@@ -45,6 +45,7 @@ class APIfeatures {
   }
 
   paginating() {
+
     const page = this.queryString.page * 1 || 1
     const limit = this.queryString.limit * 1 || 8
     const skip = (page - 1) * limit;
@@ -54,12 +55,6 @@ class APIfeatures {
 
   filtering() {
     const queryObj = { ...this.queryString }
-
-    const excludeFields = ['page', 'limit']
-    excludeFields.forEach(el => delete(queryObj[el]))
-
-    if (queryObj.type !== 'all')
-      this.query.find({ type: queryObj.type })
 
     if (queryObj.name !== 'all')
       this.query.find({ name: { $regex: queryObj.name } })

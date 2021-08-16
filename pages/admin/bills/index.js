@@ -1,6 +1,8 @@
 import Head from 'next/head'
-import Bill from '../../../models/Bill'
-import dbConnect from '../../../lib/dbConnect'
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { getData } from '../../../lib/fetchData'
+import filterSearch from '../../../lib/filterSearch'
 import BillTable from '../../../components/BillTable'
 import { makeStyles } from '@material-ui/core/styles'
 import AdToolBar from '../../../components/AdToolBar'
@@ -9,6 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography'
 import InputBase from '@material-ui/core/InputBase'
 import SearchIcon from '@material-ui/icons/Search'
+import InputAdornment from '@material-ui/core/InputAdornment';
+import ClearIcon from '@material-ui/icons/Clear';
+import IconButton from '@material-ui/core/IconButton'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,8 +60,28 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Index = ({ bills }) => {
+const Index = (props) => {
+    const router = useRouter()
     const classes = useStyles();
+    const [bills, setBills] = useState(props.bills)
+    const [search, setSearch] = useState('')
+    const [page, setPage] = useState(1)
+
+    useEffect(() => {
+        setBills(props.bills)
+
+        if (Object.keys(router.query).length === 0) setPage(1)
+
+    }, [router.query, props.bills])
+
+    useEffect(() => {
+        filterSearch({ router, search: search ? search.toLowerCase() : 'all' })
+    }, [search])
+
+    const handleLoadmore = () => {
+        setPage(page + 1)
+        filterSearch({ router, page: page + 1 })
+    }
 
     return (
         <div>
@@ -86,28 +111,47 @@ const Index = ({ bills }) => {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
+                            value={search.toLowerCase()}
+                            onChange={e => setSearch(e.target.value)}
+                            endAdornment={
+                                !search ? null :
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            className={classes.menuButton}
+                                            edge="end"
+                                            onClick={() => setSearch('')}
+                                        >
+                                            <ClearIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                            }
                         />
                     </div>
                 </Grid>
-                <BillTable bills={bills} />
+                <BillTable
+                    bills={bills}
+                    handleLoadmore={handleLoadmore}
+                    page={page}
+                    length={props.length} />
             </Container>
         </div>
     )
 }
 
-export async function getServerSideProps() {
-    await dbConnect()
+export async function getServerSideProps({ query }) {
+    const page = query.page || 1
+    const search = query.search || 'all'
 
-    const resultBill = await Bill.find({}).sort({ _id: -1 })
-    const bills = resultBill.map((doc) => {
-        const bill = doc.toObject()
-        bill._id = bill._id.toString()
-        bill.date = bill.date.toLocaleString()
-        return bill
-    })
+    const resultBill = await getData(
+        `bills?limit=${page * 8}&name=${search}`
+    )
 
-
-    return { props: { bills: bills } }
+    return {
+        props: {
+            bills: resultBill.bills,
+            length: resultBill.length,
+        }
+    }
 }
 
 export default Index

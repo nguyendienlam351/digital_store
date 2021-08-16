@@ -103,7 +103,7 @@ export async function getServerSideProps({ query }) {
   const type = query.type || 'all'
   const search = query.search || 'all'
 
-  const resultType = await getData('types')
+  const resultType = await getData('types?limit=all&name=all')
 
   const resultProduct = await getData(
     `products?limit=${page * 8}&type=${type}&name=${search}`
