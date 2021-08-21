@@ -1,19 +1,14 @@
 import React from 'react'
 import Head from 'next/head'
-import { makeStyles } from '@material-ui/core/styles'
 import AdToolBar from '../../../components/AdToolBar'
 import BillDetailTable from '../../../components/BillDetailTable'
 import BillDetail from '../../../components/BillDetail'
+import Layout from '../../../components/Layout'
 import Bill from '../../../models/Bill'
 import dbConnect from '../../../lib/dbConnect'
-import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3),
-    },
     grid: {
         marginBottom: theme.spacing(3),
     },
@@ -28,12 +23,12 @@ export default function BillDetails({ bill }) {
                 <title>Bill Details</title>
             </Head>
             <AdToolBar select="Quản lý đơn hàng" />
-            <Container className={classes.root}>
+            <Layout>
                 <div className={classes.grid}>
-                <BillDetail bill={bill} />
+                    <BillDetail bill={bill} />
                 </div>
                 <BillDetailTable product={bill.product} />
-            </Container>
+            </Layout>
         </div>
     )
 }

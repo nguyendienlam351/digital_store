@@ -4,23 +4,18 @@ import { useRouter } from 'next/router'
 import { getData } from '../../../lib/fetchData'
 import filterSearch from '../../../lib/filterSearch'
 import BillTable from '../../../components/BillTable'
-import { makeStyles } from '@material-ui/core/styles'
+import Layout from '../../../components/Layout'
 import AdToolBar from '../../../components/AdToolBar'
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import InputBase from '@material-ui/core/InputBase'
-import SearchIcon from '@material-ui/icons/Search'
-import InputAdornment from '@material-ui/core/InputAdornment';
-import ClearIcon from '@material-ui/icons/Clear';
+import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
+import SearchIcon from '@material-ui/icons/Search'
+import ClearIcon from '@material-ui/icons/Clear'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3),
-    },
     grid: {
         marginBottom: theme.spacing(3),
     },
@@ -89,7 +84,7 @@ const Index = (props) => {
                 <title>Bills Manager</title>
             </Head>
             <AdToolBar select="Quản lý hóa đơn" />
-            <Container className={classes.root}>
+            <Layout>
                 <Grid
                     container
                     direction="row"
@@ -133,7 +128,7 @@ const Index = (props) => {
                     handleLoadmore={handleLoadmore}
                     page={page}
                     length={props.length} />
-            </Container>
+            </Layout>
         </div>
     )
 }

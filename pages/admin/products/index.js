@@ -1,27 +1,22 @@
 import Head from 'next/head'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { getData } from '../../../lib/fetchData'
 import filterSearch from '../../../lib/filterSearch'
 import ProductTable from '../../../components/ProductTable'
-import { makeStyles } from '@material-ui/core/styles'
 import AdToolBar from '../../../components/AdToolBar'
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import Layout from '../../../components/Layout'
+import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button'
 import InputBase from '@material-ui/core/InputBase'
-import SearchIcon from '@material-ui/icons/Search'
-import InputAdornment from '@material-ui/core/InputAdornment';
-import ClearIcon from '@material-ui/icons/Clear';
+import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
+import ClearIcon from '@material-ui/icons/Clear'
+import SearchIcon from '@material-ui/icons/Search'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3),
-    },
     grid: {
         marginBottom: theme.spacing(3),
     },
@@ -76,8 +71,8 @@ const Index = (props) => {
     }, [router.query, props.products])
 
     useEffect(() => {
-        filterSearch({router, search: search ? search.toLowerCase() : 'all'})
-    },[search])
+        filterSearch({ router, search: search ? search.toLowerCase() : 'all' })
+    }, [search])
 
     const handleAdd = () => {
         router.push('/admin/products/new')
@@ -94,7 +89,7 @@ const Index = (props) => {
                 <title>Product Manager</title>
             </Head>
             <AdToolBar select="Quản lý sản phẩm" />
-            <Container className={classes.root}>
+            <Layout>
                 <Grid
                     container
                     direction="row"
@@ -116,7 +111,7 @@ const Index = (props) => {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
-                            value={search.toLowerCase()} 
+                            value={search.toLowerCase()}
                             onChange={e => setSearch(e.target.value)}
                             endAdornment={
                                 !search ? null :
@@ -141,7 +136,7 @@ const Index = (props) => {
                     handleLoadmore={handleLoadmore}
                     page={page}
                     length={props.length} />
-            </Container>
+            </Layout>
         </div>
     )
 }

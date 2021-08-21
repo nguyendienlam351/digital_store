@@ -1,24 +1,19 @@
 import React, { useState } from 'react'
-import Container from '@material-ui/core/Container';
-import { makeStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid';
-import Image from 'next/image'
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { mutate } from 'swr'
 import { useRouter } from 'next/router'
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
+import Image from 'next/image'
+import { mutate } from 'swr'
+import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import InputLabel from '@material-ui/core/InputLabel'
+import Button from '@material-ui/core/Button'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import Snackbar from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        paddingTop: theme.spacing(3),
-    },
     grid: {
         padding: theme.spacing(3, 0, 3, 0),
     },
@@ -156,13 +151,17 @@ export default function ProductForm({ types, product, isNew }) {
     };
 
     return (
-        <Container maxWidth="md" className={classes.root}>
+        <div>
             <Grid
                 className={classes.grid}
                 container
                 direction="row"
             >
-                <Grid item xs={5} container justifyContent="center" >
+                <Grid item xs={5}
+                    direction="column"
+                    alignItems="center"
+                    container
+                    justifyContent="center" >
                     <Image alt="product image" src={form.image == '' ? "/image.png" : form.image} width={300} height={300} />
                     <div className={classes.div}>
                         <input
@@ -259,6 +258,6 @@ export default function ProductForm({ types, product, isNew }) {
                     {errors}
                 </Alert>
             </Snackbar>
-        </Container >
+        </div>
     )
 }

@@ -1,17 +1,18 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
+import { DataContext } from '../store/GlobalState'
+import clsx from 'clsx'
+import Cookie from 'js-cookie'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
 import { alpha, makeStyles } from '@material-ui/core/styles'
-import clsx from 'clsx';
+import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
-import Image from 'next/image'
 import AppBar from '@material-ui/core/AppBar'
-import Link from '@material-ui/core/Link';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,6 +88,15 @@ export default function AdToolBar({ select }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const { state, dispatch } = useContext(DataContext)
+  const { auth } = state
+
+  const handleLogout = () => {
+    Cookie.remove('refreshtoken', {path: '/'})
+    localStorage.removeItem('firstLogin')
+    dispatch({ type: 'AUTH', payload: {} })
+}
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -115,35 +125,44 @@ export default function AdToolBar({ select }) {
       <AppBar position="static">
         <Container maxWidth="lg">
           <Toolbar>
-            <IconButton
+          <IconButton
               className={classes.menuButton}
               color="inherit"
+              onClick={()=>router.push('/admin/products')}
             >
-              <Link component="a" href="/" color="inherit" >
                 <Image alt="logo" src="/favicon.ico" width={20} height={20} />
-              </Link>
             </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap>
-              <Link component="a" href="/" color="inherit" >
+            <Typography className={classes.title} variant="h6" noWrap  onClick={()=>router.push('/admin/products')}>
                 Digital Store
-              </Link>
             </Typography>
-            <Button className={clsx(classes.button, classes.menuButton)} onClick={handleClick}>
-              {select}
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={() => handleSelect(1)}>Quản lý sản phẩm</MenuItem>
-              <MenuItem onClick={() => handleSelect(2)}>Quản lý loại sản phẩm</MenuItem>
-              <MenuItem onClick={() => handleSelect(3)}>Quản lý đơn hàng</MenuItem>
-            </Menu>
-            <Button className={clsx(classes.button, classes.menuButton)}>
-              Đăng xuất
-            </Button>
+            {Object.keys(auth).length == 0 ?
+              <Button 
+              className={clsx(classes.button, classes.menuButton)}
+              onClick={()=>router.push('/admin/login')}>
+                Đăng nhập
+              </Button>
+              :
+              <div>
+                <Button className={clsx(classes.button, classes.menuButton)} onClick={handleClick}>
+                  {select}
+                </Button>
+                <Menu
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={() => handleSelect(1)}>Quản lý sản phẩm</MenuItem>
+                  <MenuItem onClick={() => handleSelect(2)}>Quản lý loại sản phẩm</MenuItem>
+                  <MenuItem onClick={() => handleSelect(3)}>Quản lý đơn hàng</MenuItem>
+                </Menu>
+                <Button 
+                className={clsx(classes.button, classes.menuButton)}
+                onClick={()=>handleLogout()}>
+                  Đăng xuất
+                </Button>
+              </div>
+            }
           </Toolbar>
         </Container>
       </AppBar>

@@ -5,25 +5,20 @@ import { getData } from '../../../lib/fetchData'
 import filterSearch from '../../../lib/filterSearch'
 import TypeTable from '../../../components/TypeTable'
 import TypeForm from '../../../components/TypeForm'
-import { makeStyles } from '@material-ui/core/styles'
 import AdToolBar from '../../../components/AdToolBar'
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import Layout from '../../../components/Layout'
+import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import InputBase from '@material-ui/core/InputBase'
-import SearchIcon from '@material-ui/icons/Search'
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import ClearIcon from '@material-ui/icons/Clear';
+import Snackbar from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
+import ClearIcon from '@material-ui/icons/Clear'
+import SearchIcon from '@material-ui/icons/Search'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3),
-    },
     grid: {
         marginBottom: theme.spacing(3),
     },
@@ -118,7 +113,7 @@ const Index = (props) => {
                 <title>Type Manager</title>
             </Head>
             <AdToolBar select="Quản lý loại sản phẩm" />
-            <Container className={classes.root}>
+            <Layout>
                 <Grid
                     container
                     direction="row"
@@ -180,7 +175,7 @@ const Index = (props) => {
                             setErrors={setErrors} />
                     </Grid>
                 </Grid>
-            </Container>
+            </Layout>
 
             <Snackbar
                 anchorOrigin={{ vertical: 'top', horizontal: 'center', }}
