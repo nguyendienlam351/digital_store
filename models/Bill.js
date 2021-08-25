@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const BillSchema = new mongoose.Schema({
   date: {
     type: Date,
-    required: [true, 'Please provide a date for this bill.'],
+    default: Date.now
   },
   name: {
     type: String,
@@ -13,7 +13,7 @@ const BillSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: [true, 'Please provide a type for this bill.'],
-    maxlength: [10, 'Phone cannot be more than 10 characters'],
+    length: [10, 'Phone cannot be more than 10 characters'],
   },
   address: {
     type: String,

@@ -22,55 +22,63 @@ const useStyles = makeStyles((theme) => ({
         height: 160,
     },
 }));
-export default function CartProduct() {
+
+export default function CartProduct({product,upQuant,downQuant,deleteCart}) {
     const classes = useStyles();
+
     return (
         <Card className={classes.root}>
-            <Grid 
-            container 
-            alignItems="center" 
-            xs={3}>
-                <CardMedia
-                    className={classes.media}
-                    image="https://cdn.tgdd.vn/Products/Images/42/213033/iphone-12-pro-max-xanh-duong-new-600x600-600x600.jpg"
-                />
-            </Grid>
-            <Grid xs={12}>
-                <CardContent >
-                    <Typography variant="h6">
-                        Laptop Lenovo Legion 5 Gaming 15IMH05
-                    </Typography>
-                    <Typography variant="subtitle1">
-                        Giá: <NumberFormat value={1000000} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
-                    </Typography>
-                    <Grid
-                        className={classes.gridItem}
-                        container
-                        direction="row"
-                        alignItems="center">
-                        <IconButton
-                            color="inherit"
-                        >
-                            <ArrowLeftIcon color="primary" />
-                        </IconButton>
-                        <Typography variant="subtitle1">
-                            1
+                <Grid
+                    container
+                    alignItems="center"
+                    item
+                    xs={4}>
+                    <CardMedia
+                        className={classes.media}
+                        image={product.image}
+                    />
+                </Grid>
+                <Grid item xs={7}>
+                    <CardContent >
+                        <Typography variant="h6">
+                            {product.name}
                         </Typography>
-                        <IconButton
-                            color="inherit"
-                        >
-                            <ArrowRightIcon color="primary" />
+                        <Typography variant="subtitle1">
+                            Giá: <NumberFormat value={product.price} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
+                        </Typography>
+                        <Typography variant="subtitle1">
+                            Kho: {product.quantity}
+                        </Typography>
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="center">
+                            <IconButton
+                            onClick={()=>downQuant(product._id)}
+                                disabled={product.cart_quantity == 1}
+                                color="inherit"
+                            >
+                                <ArrowLeftIcon color="primary" />
+                            </IconButton>
+                            <Typography variant="subtitle1">
+                                {product.cart_quantity}
+                            </Typography>
+                            <IconButton
+                            onClick={()=>upQuant(product._id)}
+                                disabled={product.cart_quantity == product.quantity}
+                                color="inherit"
+                            >
+                                <ArrowRightIcon color="primary" />
+                            </IconButton>
+                        </Grid>
+                    </CardContent>
+                </Grid>
+                <Grid item xs={1}>
+                        <IconButton onClick={()=> deleteCart(product._id)}>
+                            <DeleteIcon />
                         </IconButton>
-                    </Grid>
-                </CardContent>
-            </Grid>
-            <Grid xs={2}>
-                <CardContent >
-                    <IconButton>
-                        <DeleteIcon />
-                    </IconButton>
-                </CardContent >
-            </Grid>
+                </Grid>
         </Card>
     )
 }
+

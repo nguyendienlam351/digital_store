@@ -1,15 +1,15 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { getData } from '../lib/fetchData'
+import TypeList from '../components/TypeList'
+import ProductList from '../components/ProductList'
 import { makeStyles } from '@material-ui/core/styles'
 import ToolBar from '../components/ToolBar'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import TypeList from '../components/TypeList'
-import ProductList from '../components/ProductList'
-import Link from '@material-ui/core/Link';
-import { getData } from '../lib/fetchData'
-import { useRouter } from 'next/router'
+import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = ({ types, products }) => {
-  const classes = useStyles();
+  const classes = useStyles()
   const router = useRouter()
 
   return (

@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useContext } from 'react'
+import { useRouter } from 'next/router'
+import Image from 'next/image'
+import filterSearch from '../lib/filterSearch'
+import { DataContext } from '../store/GlobalState'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import InputBase from '@material-ui/core/InputBase'
 import { alpha, makeStyles } from '@material-ui/core/styles'
-import SearchIcon from '@material-ui/icons/Search'
 import Container from '@material-ui/core/Container'
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
-import Image from 'next/image'
 import AppBar from '@material-ui/core/AppBar'
-import filterSearch from '../lib/filterSearch'
-import { useRouter } from 'next/router'
-import InputAdornment from '@material-ui/core/InputAdornment';
-import ClearIcon from '@material-ui/icons/Clear';
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Badge from '@material-ui/core/Badge'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import ClearIcon from '@material-ui/icons/Clear'
+import SearchIcon from '@material-ui/icons/Search'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   menuButton: {
-    margin: theme.spacing(0, 1, 0, 1),
+    margin: theme.spacing(0, 1),
   },
   title: {
     flexGrow: 1,
@@ -69,8 +71,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ToolBar({isAll,srch}) {
-  const classes = useStyles();
+  const classes = useStyles()
   const router = useRouter()
+  const { state, dispatch } = useContext(DataContext)
+  const { cart } = state
   const [search, setSearch] = useState(srch == null || srch == 'all' ? '' : srch)
 
   useEffect(() => {
@@ -129,6 +133,7 @@ export default function ToolBar({isAll,srch}) {
               onClick={()=>router.push('/cart')}
             >
               <ShoppingCartIcon />
+              <Badge badgeContent={cart.length !== 0 ? cart.length : null } color="secondary"/>
             </IconButton>
           </Toolbar>
         </Container>

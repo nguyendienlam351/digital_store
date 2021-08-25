@@ -1,5 +1,6 @@
 import dbConnect from '../../../lib/dbConnect'
 import Bill from '../../../models/Bill'
+import Product from '../../../models/Product'
 
 export default async function handler(req, res) {
   const { method } = req
@@ -13,7 +14,7 @@ export default async function handler(req, res) {
 
         const bills = await features.query
 
-        res.json({ 
+        res.json({
           status: 'success',
           length: bills.length,
           bills
@@ -26,7 +27,12 @@ export default async function handler(req, res) {
       try {
         const bill = await Bill.create(
           req.body
-        ) /* create a new model in the database */
+        )
+
+        req.body.product.filter(item => {
+          return sold(item._id, item.quantity, item.cart_quantity)
+        })
+
         res.status(201).json({ success: true, data: bill })
       } catch (error) {
         res.status(400).json({ success: false })
@@ -36,6 +42,12 @@ export default async function handler(req, res) {
       res.status(400).json({ success: false })
       break
   }
+}
+
+const sold = async (id, quantity, cart_quantity) => {
+  await Product.findOneAndUpdate({ _id: id }, {
+    quantity: quantity - cart_quantity,
+  })
 }
 
 class APIfeatures {
