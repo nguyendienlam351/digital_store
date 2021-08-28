@@ -10,6 +10,10 @@ const BillSchema = new mongoose.Schema({
     required: [true, 'Please provide a name for this bill.'],
     maxlength: [60, 'Name cannot be more than 60 characters'],
   },
+  email: {
+    type: String,
+    required: [true, 'Please provide a email for this bill.'],
+  },
   phone: {
     type: String,
     required: [true, 'Please provide a type for this bill.'],

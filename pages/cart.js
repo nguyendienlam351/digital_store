@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import React, { useState, useEffect, useContext } from 'react'
+import { sendBillEmail } from '../lib/sendEmail'
 import { getData, postData } from '../lib/fetchData'
 import { DataContext } from '../store/GlobalState'
 import { increase, decrease, deleteToCart } from '../store/Actions'
@@ -20,6 +21,11 @@ import FormControl from '@material-ui/core/FormControl'
 import Backdrop from '@material-ui/core/Backdrop'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Snackbar from '@material-ui/core/Snackbar'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import Alert from '@material-ui/lab/Alert'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 
@@ -39,7 +45,11 @@ const useStyles = makeStyles((theme) => ({
     item: {
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1),
-    }
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 }));
 
 function TextMaskCustom(props) {
@@ -64,21 +74,22 @@ TextMaskCustom.propTypes = {
 
 const Cart = () => {
     const classes = useStyles()
-    const contentType = 'application/json'
     const [totalPrice, setTotalPrice] = useState(0)
     const { state, dispatch } = useContext(DataContext)
     const { cart } = state
     const [notify, setNotify] = useState({})
+    const [open, setOpen] = useState(false);
     const [callback, setCallback] = useState(false)
     const [form, setForm] = useState(
         {
             name: '',
+            email: '',
             address: '',
             phone: '',
         }
     )
 
-    const { name, address, phone } = form
+    const { name, email, address, phone } = form
 
     useEffect(() => {
         const getTotal = () => {
@@ -116,10 +127,9 @@ const Cart = () => {
     }, [callback])
 
     const handlePayment = async () => {
-        if (!name || !address || !phone)
+        setNotify({ loading: true })
+        if (!valid())
             return setNotify({ type: "error", message: "Hãy điền đầy đủ thông tin" })
-
-        console.log(phone)
 
         let newCart = [];
         for (const item of cart) {
@@ -134,11 +144,11 @@ const Cart = () => {
             return setNotify({ type: "error", message: "Sản phẩm hết hàng hoặc số lượng không đủ" })
         }
 
-        setNotify({ loading: true })
-
-        const res = await postData('bills', { name, address, phone: phone.trim().replace('-', ''), product: cart })
+        const res = await postData('bills', { name, email, address, phone: phone.trim().replace('-', ''), product: cart })
 
         if (!res.success) return setNotify({ type: "error", message: "Lỗi đặt hàng" })
+
+        sendBillEmail(res.data)
 
         dispatch({ type: 'ADD_CART', payload: [] })
         setForm({
@@ -166,6 +176,12 @@ const Cart = () => {
     const handleClose = () => {
         setNotify({})
     }
+    
+    const valid = () =>{
+        if (!name || !address || !phone || !email) return false
+        return true
+    }
+
     const handleChange = (e) => {
         const target = e.target
         const value = target.value
@@ -221,6 +237,16 @@ const Cart = () => {
                                 variant="outlined"
                                 placeholder="Nhập họ và tên..."
                             />
+                            <TextField
+                                className={classes.textField}
+                                type="email"
+                                name="email"
+                                value={email}
+                                onChange={handleChange}
+                                label="Email"
+                                variant="outlined"
+                                placeholder="Nhập email"
+                            />
                             <FormControl
                                 className={classes.textField}
                                 variant="outlined">
@@ -251,27 +277,52 @@ const Cart = () => {
                                     thousandSeparator={true}
                                     suffix={' đ'} />
                             </Typography>
-                            <Button onClick={() => { handlePayment() }} variant="contained" color="primary">
+                            <Button disabled={!valid()} onClick={() => { setOpen(true) }} variant="contained" color="primary">
                                 Đặt hàng
                             </Button>
                         </Grid>
                     </>
                     }
                 </Grid>
-
             </Container>
-            <Backdrop className={classes.backdrop} open={notify.loading}>
+            <Backdrop className={classes.backdrop} open={notify.loading ? true : false}>
                 <CircularProgress />
             </Backdrop>
             <Snackbar
                 anchorOrigin={{ vertical: 'top', horizontal: 'center', }}
-                open={notify.message}
+                open={notify.message ? true : false}
                 autoHideDuration={6000}
                 onClose={handleClose}>
                 <Alert severity={notify.type}>
                     {notify.message}
                 </Alert>
             </Snackbar>
+            <Dialog
+                open={open}
+                onClose={()=>setOpen(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Bạn có chắc muốn đặt hàng?"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Thông tin đơn hàng của bạn sẽ được gửi đến email: {email}.
+                        Nhập chấp nhận để đặt hàng.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={()=>setOpen(false)} color="primary">
+                        Từ chối
+                    </Button>
+                    <Button onClick={()=>{
+                        setOpen(false)
+                        handlePayment()
+                        }} 
+                        color="primary" autoFocus>
+                        Chấp nhận
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }
