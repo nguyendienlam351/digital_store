@@ -13,8 +13,6 @@ import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-import Snackbar from '@material-ui/core/Snackbar'
-import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,13 +28,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function DetailProduct({ type, product }) {
+export default function DetailProduct({ product }) {
     const classes = useStyles()
     const router = useRouter()
     const { state, dispatch } = useContext(DataContext)
     const { cart } = state
     const [quant, setQuant] = useState(product.quantity !== 0 ? 1 : 0)
-    const [notify, setNotify] = useState({})
 
     const handleAddCart = () => {
         const cartProduct = {
@@ -49,10 +46,10 @@ export default function DetailProduct({ type, product }) {
         }
         const newData = addToCart(cartProduct, cart)
 
-        if (newData.type) return setNotify(newData)
+        if (newData.type) return dispatch({type: 'NOTIFY', payload:newData})
 
         dispatch({ type: 'ADD_CART', payload: newData.data })
-        setNotify({ message: newData.message })
+        dispatch({type: 'NOTIFY', payload:{ message: newData.message }})
     }
 
     const downQuant = () => {
@@ -66,10 +63,6 @@ export default function DetailProduct({ type, product }) {
             setQuant(quant + 1)
         }
     }
-
-    const handleClose = () => {
-        setNotify({})
-    };
 
     return (
         <Container maxWidth="md" className={classes.root}>
@@ -88,8 +81,8 @@ export default function DetailProduct({ type, product }) {
                     <Typography className={classes.gridItem} variant="h6">
                         {"Loại sản phẩm: "}
                         <Link component="a" color="inherit"
-                            onClick={() => router.push(`/products?type=${type._id}`)} >
-                            {type.name}
+                            onClick={() => router.push(`/products?type=${product.type._id ? product.type._id : product.type}`)} >
+                            {product.type.name ? product.type.name : ''}
                         </Link>
                     </Typography>
                     <Typography className={classes.gridItem} variant="h6">
@@ -140,15 +133,6 @@ export default function DetailProduct({ type, product }) {
             <Typography variant="subtitle1">
                 {product.description}
             </Typography>
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'center', }}
-                open={notify.message}
-                autoHideDuration={6000}
-                onClose={handleClose}>
-                <Alert severity={notify.type}>
-                    {notify.message}
-                </Alert>
-            </Snackbar>
         </Container>
     )
 }

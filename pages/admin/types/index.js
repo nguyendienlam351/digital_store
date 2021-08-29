@@ -11,8 +11,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import InputBase from '@material-ui/core/InputBase'
-import Snackbar from '@material-ui/core/Snackbar'
-import Alert from '@material-ui/lab/Alert'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
@@ -61,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
 const Index = (props) => {
     const router = useRouter()
     const classes = useStyles();
-    const [errors, setErrors] = useState('')
     const [types, setTypes] = useState(props.types)
     const [search, setSearch] = useState('')
     const [page, setPage] = useState(1)
@@ -102,10 +99,6 @@ const Index = (props) => {
             image: ''
         })
     }
-
-    const handleClose = () => {
-        setErrors('')
-    };
 
     return (
         <div>
@@ -161,7 +154,6 @@ const Index = (props) => {
                         <TypeTable
                             types={types}
                             handleSelect={handleSelect}
-                            setErrors={setErrors}
                             handleLoadmore={handleLoadmore}
                             page={page}
                             length={props.length} />
@@ -171,21 +163,10 @@ const Index = (props) => {
                             id={id}
                             form={form}
                             setForm={setForm}
-                            handleClear={handleClear}
-                            setErrors={setErrors} />
+                            handleClear={handleClear} />
                     </Grid>
                 </Grid>
             </Layout>
-
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'center', }}
-                open={errors}
-                autoHideDuration={6000}
-                onClose={handleClose}>
-                <Alert severity="error">
-                    {errors}
-                </Alert>
-            </Snackbar>
         </div>
     )
 }

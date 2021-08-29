@@ -18,10 +18,6 @@ import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
-import Backdrop from '@material-ui/core/Backdrop'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Snackbar from '@material-ui/core/Snackbar'
-import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,7 +35,6 @@ const Login = () => {
     const classes = useStyles();
     const router = useRouter()
     const [showPassword, setShowPassword] = useState(false)
-    const [notify, setNotify] = useState({})
     const initialState = { user_name: '', password: '' }
     const [userData, setUserData] = useState(initialState)
     const { user_name, password } = userData
@@ -59,12 +54,10 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
-        setNotify({loading:true})
+        dispatch({type: 'NOTIFY', payload:{loading:true}})
         const res = await postData('auth/login', userData)
 
-        if (res.err) return setNotify({type: "error",message: "Đăng nhập không thành công"})
-
-        setNotify({message: "Đăng nhập thành công"})
+        if (res.err) return dispatch({type: 'NOTIFY', payload: {type: "error",message: "Đăng nhập không thành công"}})
 
         dispatch({
             type: 'AUTH', payload: {
@@ -79,11 +72,9 @@ const Login = () => {
         })
 
         localStorage.setItem('firstLogin', true)
+        
+        dispatch({type: 'NOTIFY', payload:{message: "Đăng nhập thành công"}})
     }
-
-    const handleClose = () => {
-        setNotify({})
-    };
 
     return (
         <div>
@@ -143,20 +134,7 @@ const Login = () => {
                         Đăng nhập
                     </Button>
                 </Grid>
-            
             </Container>
-            <Backdrop className={classes.backdrop} open={notify.loading}>
-                <CircularProgress/>
-            </Backdrop>
-            <Snackbar 
-            anchorOrigin={{ vertical: 'top', horizontal: 'center', }} 
-            open={notify.message} 
-            autoHideDuration={6000} 
-            onClose={handleClose}>
-                <Alert severity={notify.type}>
-                    {notify.message}
-                </Alert>
-            </Snackbar>
         </div>
     )
 }

@@ -38,7 +38,7 @@ export default function ProductTable({ products, handleLoadmore, length, page })
             })
             router.push('/admin/products/')
         } catch (error) {
-            console.log('Failed to delete the pet.')
+            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to delete the product.'}})
         }
     }
 

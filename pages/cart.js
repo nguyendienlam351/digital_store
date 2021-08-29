@@ -18,15 +18,11 @@ import MaskedInput from 'react-text-mask'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
-import Backdrop from '@material-ui/core/Backdrop'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Snackbar from '@material-ui/core/Snackbar'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Alert from '@material-ui/lab/Alert'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 
 const useStyles = makeStyles((theme) => ({
@@ -45,10 +41,6 @@ const useStyles = makeStyles((theme) => ({
     item: {
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1),
-    },
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
     },
 }));
 
@@ -77,7 +69,6 @@ const Cart = () => {
     const [totalPrice, setTotalPrice] = useState(0)
     const { state, dispatch } = useContext(DataContext)
     const { cart } = state
-    const [notify, setNotify] = useState({})
     const [open, setOpen] = useState(false);
     const [callback, setCallback] = useState(false)
     const [form, setForm] = useState(
@@ -127,9 +118,9 @@ const Cart = () => {
     }, [callback])
 
     const handlePayment = async () => {
-        setNotify({ loading: true })
+        dispatch({type: 'NOTIFY', payload:{ loading: true }})
         if (!valid())
-            return setNotify({ type: "error", message: "Hãy điền đầy đủ thông tin" })
+            return dispatch({type: 'NOTIFY', payload:{ type: "error", message: "Hãy điền đầy đủ thông tin" }})
 
         let newCart = [];
         for (const item of cart) {
@@ -141,12 +132,12 @@ const Cart = () => {
 
         if (newCart.length < cart.length) {
             setCallback(!callback)
-            return setNotify({ type: "error", message: "Sản phẩm hết hàng hoặc số lượng không đủ" })
+            return dispatch({type: 'NOTIFY', payload:{ type: "error", message: "Sản phẩm hết hàng hoặc số lượng không đủ" }})
         }
 
         const res = await postData('bills', { name, email, address, phone: phone.trim().replace('-', ''), product: cart })
 
-        if (!res.success) return setNotify({ type: "error", message: "Lỗi đặt hàng" })
+        if (!res.success) return dispatch({type: 'NOTIFY', payload:{ type: "error", message: "Lỗi đặt hàng" }})
 
         sendBillEmail(res.data)
 
@@ -157,7 +148,7 @@ const Cart = () => {
             phone: '',
         })
 
-        setNotify({ message: "Đặt hàng thành công" })
+        dispatch({type: 'NOTIFY', payload:{ message: "Đặt hàng thành công" }})
     }
 
 
@@ -171,10 +162,6 @@ const Cart = () => {
 
     const upQuant = (id) => {
         dispatch({ type: 'ADD_CART', payload: increase(cart, id) })
-    }
-
-    const handleClose = () => {
-        setNotify({})
     }
     
     const valid = () =>{
@@ -285,18 +272,6 @@ const Cart = () => {
                     }
                 </Grid>
             </Container>
-            <Backdrop className={classes.backdrop} open={notify.loading ? true : false}>
-                <CircularProgress />
-            </Backdrop>
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'center', }}
-                open={notify.message ? true : false}
-                autoHideDuration={6000}
-                onClose={handleClose}>
-                <Alert severity={notify.type}>
-                    {notify.message}
-                </Alert>
-            </Snackbar>
             <Dialog
                 open={open}
                 onClose={()=>setOpen(false)}

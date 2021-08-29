@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
+import { DataContext } from '../store/GlobalState'
 import { mutate } from 'swr'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -10,8 +11,6 @@ import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
-import Snackbar from '@material-ui/core/Snackbar'
-import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -38,9 +37,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductForm({ types, product, isNew }) {
     const router = useRouter()
+    const { dispatch } = useContext(DataContext)
     const contentType = 'application/json'
     const classes = useStyles();
-    const [errors, setErrors] = useState('')
     const [form, setForm] = useState({
         name: product.name,
         image: product.image,
@@ -76,18 +75,17 @@ export default function ProductForm({ types, product, isNew }) {
                 body: JSON.stringify(form),
             })
 
-            // Throw error with status code in case Fetch API req failed
             if (!res.ok) {
                 throw new Error(res.status)
             }
 
             const { data } = await res.json()
 
-            mutate(`/api/products/${id}`, data, false) // Update the local data without a revalidation
+            mutate(`/api/products/${id}`, data, false)
 
             router.push('/admin/products')
         } catch (error) {
-            setErrors('Failed to update product')
+            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to update product'}})
         }
     }
 
@@ -102,14 +100,13 @@ export default function ProductForm({ types, product, isNew }) {
                 body: JSON.stringify(form),
             })
 
-            // Throw error with status code in case Fetch API req failed
             if (!res.ok) {
                 throw new Error(res.status)
             }
 
             router.push('/admin/products')
         } catch (error) {
-            setErrors('Failed to add product')
+            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to add product'}})
         }
     }
 
@@ -142,12 +139,8 @@ export default function ProductForm({ types, product, isNew }) {
         if (Object.keys(errs).length === 0) {
             isNew ? postData() : putData()
         } else {
-            setErrors(errs)
+            dispatch({type: 'NOTIFY', payload:{ type: "error", message:errs}})
         }
-    };
-
-    const handleClose = () => {
-        setErrors('')
     };
 
     return (
@@ -252,12 +245,6 @@ export default function ProductForm({ types, product, isNew }) {
                     {isNew ? "Thêm mới" : "Thay đổi"}
                 </Button>
             </Grid>
-
-            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center', }} open={errors} autoHideDuration={6000} onClose={handleClose}>
-                <Alert severity="error">
-                    {errors}
-                </Alert>
-            </Snackbar>
         </div>
     )
 }

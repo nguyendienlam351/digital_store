@@ -1,12 +1,13 @@
-import React from 'react'
-import Container from '@material-ui/core/Container';
-import { makeStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid';
-import Image from 'next/image'
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import React, { useContext } from 'react'
+import { DataContext } from '../store/GlobalState'
 import { mutate } from 'swr'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
+import Container from '@material-ui/core/Container'
+import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,8 +34,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function TypeForm({ id, form, setForm, handleClear, setErrors }) {
+export default function TypeForm({ id, form, setForm, handleClear }) {
     const router = useRouter()
+    const { dispatch } = useContext(DataContext)
     const contentType = 'application/json'
     const classes = useStyles();
 
@@ -46,7 +48,6 @@ export default function TypeForm({ id, form, setForm, handleClear, setErrors }) 
     }
 
     const putData = async () => {
-
         try {
             const res = await fetch(`/api/types/${id}`, {
                 method: 'PUT',
@@ -57,18 +58,17 @@ export default function TypeForm({ id, form, setForm, handleClear, setErrors }) 
                 body: JSON.stringify(form),
             })
 
-            // Throw error with status code in case Fetch API req failed
             if (!res.ok) {
                 throw new Error(res.status)
             }
 
             const { data } = await res.json()
 
-            mutate(`/api/products/${id}`, data, false) // Update the local data without a revalidation
+            mutate(`/api/products/${id}`, data, false)
             handleClear()
             router.push('/admin/types')
         } catch (error) {
-            setErrors('Failed to update type')
+            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to update type'}})
         }
     }
 
@@ -83,14 +83,13 @@ export default function TypeForm({ id, form, setForm, handleClear, setErrors }) 
                 body: JSON.stringify(form),
             })
 
-            // Throw error with status code in case Fetch API req failed
             if (!res.ok) {
                 throw new Error(res.status)
             }
             handleClear()
             router.push('/admin/types')
         } catch (error) {
-            setErrors('Failed to add type')
+            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to add type'}})
         }
     }
 
@@ -109,7 +108,7 @@ export default function TypeForm({ id, form, setForm, handleClear, setErrors }) 
         if (Object.keys(errs).length === 0) {
             !id ? postData() : putData()
         } else {
-            setErrors(errs)
+            dispatch({type: 'NOTIFY', payload:{ type: "error", message:errs}})
         }
     };
 

@@ -80,7 +80,7 @@ export default function ToolBar({isAll,srch}) {
   useEffect(() => {
     if(search !== '' || isAll){
     router.pathname = 'products/'
-    filterSearch({router, search: search ? search.toLowerCase() : 'all'})}
+    filterSearch({router, search: search ? search : 'all'})}
 },[search])
 
   return (
