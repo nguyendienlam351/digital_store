@@ -64,7 +64,7 @@ TextMaskCustom.propTypes = {
     inputRef: PropTypes.func.isRequired,
 };
 
-const Cart = () => {
+const Cart = ({ products }) => {
     const classes = useStyles()
     const [totalPrice, setTotalPrice] = useState(0)
     const { state, dispatch } = useContext(DataContext)
@@ -83,6 +83,13 @@ const Cart = () => {
     const { name, email, address, phone } = form
 
     useEffect(() => {
+        if (products) {
+            updateCart()
+        }
+
+    }, [])
+
+    useEffect(() => {
         const getTotal = () => {
             const res = cart.reduce((prev, item) => {
                 return prev + (item.price * item.cart_quantity)
@@ -97,22 +104,6 @@ const Cart = () => {
     useEffect(() => {
         const cartLocal = JSON.parse(localStorage.getItem('local_cart'))
         if (cartLocal && cartLocal.length > 0) {
-            let newArr = []
-            const updateCart = async () => {
-                for (const item of cartLocal) {
-                    const res = await getData(`products/${item._id}`)
-                    const { _id, name, image, price, quantity } = res.data
-                    if (quantity > 0) {
-                        newArr.push({
-                            _id, name, image, price, quantity,
-                            cart_quantity: item.cart_quantity > quantity ? quantity : item.cart_quantity
-                        })
-                    }
-                }
-
-                dispatch({ type: 'ADD_CART', payload: newArr })
-            }
-
             updateCart()
         }
     }, [callback])
@@ -135,7 +126,7 @@ const Cart = () => {
             return dispatch({ type: 'NOTIFY', payload: { type: "error", message: "Sản phẩm hết hàng hoặc số lượng không đủ" } })
         }
 
-        const res = await postData('bills', { name,email: email.toLowerCase(), address, phone: phone.replace(/[- ]/g, ''), product: cart })
+        const res = await postData('bills', { name, email: email.toLowerCase(), address, phone: phone.replace(/[- ]/g, ''), product: cart })
 
         if (!res.success) return dispatch({ type: 'NOTIFY', payload: { type: "error", message: "Lỗi đặt hàng" } })
 
@@ -167,7 +158,7 @@ const Cart = () => {
             || !(address.trim())
             || !(phone.replace(/[-\s]/g, ''))
             || !(re.test(String(email).toLowerCase()))
-            )
+        )
             return false
         return true
     }
@@ -181,6 +172,23 @@ const Cart = () => {
             ...form,
             [name]: value,
         })
+    }
+
+    
+    const updateCart = async () => {
+        let newArr = []
+        for (const item of products) {
+            const res = await getData(`products/${item._id}`)
+            const { _id, name, image, price, quantity } = res.data
+            if (quantity > 0) {
+                newArr.push({
+                    _id, name, image, price, quantity,
+                    cart_quantity: item.cart_quantity > quantity ? quantity : item.cart_quantity
+                })
+            }
+        }
+
+        dispatch({ type: 'ADD_CART', payload: newArr })
     }
     return (
         <div>
@@ -283,7 +291,7 @@ const Cart = () => {
                 <DialogTitle id="alert-dialog-title">{"Bạn có chắc muốn đặt hàng?"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Thông tin đơn hàng của bạn sẽ được gửi đến email: <Typography color='textPrimary'>{email}</Typography>.<br/>
+                        Thông tin đơn hàng của bạn sẽ được gửi đến email: <Typography color='textPrimary'>{email}</Typography>.<br />
                         Nhập chấp nhận để đặt hàng.
                     </DialogContentText>
                 </DialogContent>
@@ -302,6 +310,17 @@ const Cart = () => {
             </Dialog>
         </div>
     )
+}
+
+export async function getServerSideProps({ query }) {
+    if (!query.id) return { props: { products: null } }
+
+    const bill = await getData(`bills/${query.id}`)
+
+    return { props: { 
+        products: 
+        bill.data ? bill.data.product : null 
+    } }
 }
 
 export default Cart
