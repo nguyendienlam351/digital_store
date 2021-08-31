@@ -69,7 +69,7 @@ const Cart = () => {
     const [totalPrice, setTotalPrice] = useState(0)
     const { state, dispatch } = useContext(DataContext)
     const { cart } = state
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
     const [callback, setCallback] = useState(false)
     const [form, setForm] = useState(
         {
@@ -118,9 +118,9 @@ const Cart = () => {
     }, [callback])
 
     const handlePayment = async () => {
-        dispatch({type: 'NOTIFY', payload:{ loading: true }})
+        dispatch({ type: 'NOTIFY', payload: { loading: true } })
         if (!valid())
-            return dispatch({type: 'NOTIFY', payload:{ type: "error", message: "Hãy điền đầy đủ thông tin" }})
+            return dispatch({ type: 'NOTIFY', payload: { type: "error", message: "Hãy điền đầy đủ thông tin" } })
 
         let newCart = [];
         for (const item of cart) {
@@ -132,14 +132,12 @@ const Cart = () => {
 
         if (newCart.length < cart.length) {
             setCallback(!callback)
-            return dispatch({type: 'NOTIFY', payload:{ type: "error", message: "Sản phẩm hết hàng hoặc số lượng không đủ" }})
+            return dispatch({ type: 'NOTIFY', payload: { type: "error", message: "Sản phẩm hết hàng hoặc số lượng không đủ" } })
         }
 
-        const res = await postData('bills', { name, email, address, phone: phone.trim().replace('-', ''), product: cart })
+        const res = await postData('bills', { name,email: email.toLowerCase(), address, phone: phone.replace(/[- ]/g, ''), product: cart })
 
-        if (!res.success) return dispatch({type: 'NOTIFY', payload:{ type: "error", message: "Lỗi đặt hàng" }})
-
-        sendBillEmail(res.data)
+        if (!res.success) return dispatch({ type: 'NOTIFY', payload: { type: "error", message: "Lỗi đặt hàng" } })
 
         dispatch({ type: 'ADD_CART', payload: [] })
         setForm({
@@ -148,9 +146,8 @@ const Cart = () => {
             phone: '',
         })
 
-        dispatch({type: 'NOTIFY', payload:{ message: "Đặt hàng thành công" }})
+        sendBillEmail(res.data, dispatch)
     }
-
 
     const deleteCart = (id) => {
         dispatch({ type: 'ADD_CART', payload: deleteToCart(cart, id) })
@@ -163,9 +160,15 @@ const Cart = () => {
     const upQuant = (id) => {
         dispatch({ type: 'ADD_CART', payload: increase(cart, id) })
     }
-    
-    const valid = () =>{
-        if (!name || !address || !phone || !email) return false
+
+    const valid = () => {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!(name.trim())
+            || !(address.trim())
+            || !(phone.replace(/[-\s]/g, ''))
+            || !(re.test(String(email).toLowerCase()))
+            )
+            return false
         return true
     }
 
@@ -186,7 +189,6 @@ const Cart = () => {
             </Head>
             <ToolBar />
             <Container maxWidth="md" className={classes.root}>
-
                 <Grid
                     className={classes.grid}
                     container
@@ -274,25 +276,25 @@ const Cart = () => {
             </Container>
             <Dialog
                 open={open}
-                onClose={()=>setOpen(false)}
+                onClose={() => setOpen(false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">{"Bạn có chắc muốn đặt hàng?"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Thông tin đơn hàng của bạn sẽ được gửi đến email: {email}.
+                        Thông tin đơn hàng của bạn sẽ được gửi đến email: <Typography color='textPrimary'>{email}</Typography>.<br/>
                         Nhập chấp nhận để đặt hàng.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={()=>setOpen(false)} color="primary">
+                    <Button onClick={() => setOpen(false)} color="primary">
                         Từ chối
                     </Button>
-                    <Button onClick={()=>{
+                    <Button onClick={() => {
                         setOpen(false)
                         handlePayment()
-                        }} 
+                    }}
                         color="primary" autoFocus>
                         Chấp nhận
                     </Button>

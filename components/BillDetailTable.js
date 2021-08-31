@@ -34,7 +34,6 @@ export default function BillDetailTable({ product }) {
                         <TableCell className={classes.head} align="right">Số lượng</TableCell>
                         <TableCell className={classes.head} align="right">Giá sản phẩm</TableCell>
                         <TableCell className={classes.head} align="right">Tổng giá</TableCell>
-                        <TableCell className={classes.head} ></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -43,12 +42,12 @@ export default function BillDetailTable({ product }) {
                             <TableCell component="th" scope="row">
                                 {row.name}
                             </TableCell>
-                            <TableCell align="right">{row.quantity}</TableCell>
+                            <TableCell align="right">{row.cart_quantity}</TableCell>
                             <TableCell align="right">
                                 <NumberFormat value={row.price} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
                             </TableCell>
                             <TableCell align="right">
-                                <NumberFormat value={row.price * row.quantity} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
+                                <NumberFormat value={row.price * row.cart_quantity} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
                             </TableCell>
                         </TableRow>
                     ))}

@@ -1,5 +1,5 @@
-import {useContext} from 'react'
-import {DataContext} from '../store/GlobalState'
+import { useContext } from 'react'
+import { DataContext } from '../store/GlobalState'
 import { makeStyles } from '@material-ui/core/styles'
 import Backdrop from '@material-ui/core/Backdrop'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -15,10 +15,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Notify = () => {
     const classes = useStyles()
-    const {state, dispatch} = useContext(DataContext)
+    const { state, dispatch } = useContext(DataContext)
     const { notify } = state
 
-    
+
     const handleClose = () => {
         dispatch({ type: 'NOTIFY', payload: {} })
     }
@@ -33,7 +33,7 @@ const Notify = () => {
                 open={notify.message ? true : false}
                 autoHideDuration={6000}
                 onClose={handleClose}>
-                <Alert severity={notify.type}>
+                <Alert style={{ whiteSpace: "pre-line" }} severity={notify.type}>
                     {notify.message}
                 </Alert>
             </Snackbar>

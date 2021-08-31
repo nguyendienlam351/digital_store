@@ -53,7 +53,7 @@ export default function BillTable(props) {
                                 {row._id}
                             </TableCell>
                             <TableCell align="right">{row.name}</TableCell>
-                            <TableCell align="right">{row.date}</TableCell>
+                            <TableCell align="right">{new Date(row.date).toLocaleString()}</TableCell>
                             <TableCell align="right">{row.phone}</TableCell>
                             <TableCell align="right">
                                 <IconButton

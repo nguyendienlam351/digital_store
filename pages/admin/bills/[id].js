@@ -4,9 +4,10 @@ import AdToolBar from '../../../components/AdToolBar'
 import BillDetailTable from '../../../components/BillDetailTable'
 import BillDetail from '../../../components/BillDetail'
 import Layout from '../../../components/Layout'
-import Bill from '../../../models/Bill'
-import dbConnect from '../../../lib/dbConnect'
+import { getData } from '../../../lib/fetchData'
 import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import RedeemIcon from '@material-ui/icons/Redeem'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -24,22 +25,30 @@ export default function BillDetails({ bill }) {
             </Head>
             <AdToolBar select="Quản lý đơn hàng" />
             <Layout>
-                <div className={classes.grid}>
-                    <BillDetail bill={bill} />
-                </div>
-                <BillDetailTable product={bill.product} />
+                {bill == null ?
+                    <Grid
+                        container
+                        justifyContent="center"
+                        direction="row"
+                    >
+                        <RedeemIcon style={{ fontSize: 400 }} />
+                    </Grid>
+                    :
+                    <>
+                        <div className={classes.grid}>
+                            <BillDetail bill={bill} />
+                        </div>
+                        <BillDetailTable product={bill.product} />
+                    </>
+                }
             </Layout>
         </div>
     )
 }
 
 export async function getServerSideProps({ params }) {
-    await dbConnect()
+    const bill = await getData(`bills/${params.id}`)
 
-    const bill = await Bill.findById(params.id).lean()
-    bill._id = bill._id.toString()
-    bill.date = bill.date.toLocaleString()
-
-    return { props: { bill: bill } }
+    return { props: { bill: bill.data || null } }
 }
 

@@ -42,7 +42,7 @@ export default function TypeForm({ id, form, setForm, handleClear }) {
 
     const formValidate = () => {
         let err = ""
-        if (!form.name) err = 'Name is required'
+        if (!(form.name.trim())) err = 'Name is required'
         if (!form.image) err = 'Image is required'
         return err
     }
@@ -68,7 +68,7 @@ export default function TypeForm({ id, form, setForm, handleClear }) {
             handleClear()
             router.push('/admin/types')
         } catch (error) {
-            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to update type'}})
+            dispatch({ type: 'NOTIFY', payload: { type: "error", message: 'Failed to update type' } })
         }
     }
 
@@ -89,7 +89,7 @@ export default function TypeForm({ id, form, setForm, handleClear }) {
             handleClear()
             router.push('/admin/types')
         } catch (error) {
-            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to add type'}})
+            dispatch({ type: 'NOTIFY', payload: { type: "error", message: 'Failed to add type' } })
         }
     }
 
@@ -108,7 +108,7 @@ export default function TypeForm({ id, form, setForm, handleClear }) {
         if (Object.keys(errs).length === 0) {
             !id ? postData() : putData()
         } else {
-            dispatch({type: 'NOTIFY', payload:{ type: "error", message:errs}})
+            dispatch({ type: 'NOTIFY', payload: { type: "error", message: errs } })
         }
     };
 

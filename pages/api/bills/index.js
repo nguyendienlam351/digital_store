@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        const features = new APIfeatures(Bill.find(), req.query).filtering().paginating()
+        const features = new APIfeatures(Bill.find().sort({ _id: -1 }), req.query).filtering().paginating()
 
         const bills = await features.query
 

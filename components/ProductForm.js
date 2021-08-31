@@ -51,14 +51,14 @@ export default function ProductForm({ types, product, isNew }) {
 
     const formValidate = () => {
         let err = ""
-        if (!form.name) err = 'Name is required'
+        if (!(form.name.trim())) err = 'Name is required'
         if (!form.image) err = 'Image is required'
         if (!form.price) err = 'Price is required'
         if (parseInt(form.price) < 1) err = 'Price must be greater than 0'
         if (!form.quantity) err = 'Quantity is required'
         if (parseInt(form.quantity) < 1) err = 'Quantity must be greater than 0'
         if (!form.type) err = 'Type is required'
-        if (!form.description) err = 'Description is required'
+        if (!(form.description.trim())) err = 'Description is required'
         return err
     }
 
@@ -85,7 +85,7 @@ export default function ProductForm({ types, product, isNew }) {
 
             router.push('/admin/products')
         } catch (error) {
-            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to update product'}})
+            dispatch({ type: 'NOTIFY', payload: { type: "error", message: 'Failed to update product' } })
         }
     }
 
@@ -106,7 +106,7 @@ export default function ProductForm({ types, product, isNew }) {
 
             router.push('/admin/products')
         } catch (error) {
-            dispatch({type: 'NOTIFY', payload:{ type: "error", message:'Failed to add product'}})
+            dispatch({ type: 'NOTIFY', payload: { type: "error", message: 'Failed to add product' } })
         }
     }
 
@@ -139,7 +139,7 @@ export default function ProductForm({ types, product, isNew }) {
         if (Object.keys(errs).length === 0) {
             isNew ? postData() : putData()
         } else {
-            dispatch({type: 'NOTIFY', payload:{ type: "error", message:errs}})
+            dispatch({ type: 'NOTIFY', payload: { type: "error", message: errs } })
         }
     };
 

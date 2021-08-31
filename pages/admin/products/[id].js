@@ -3,9 +3,9 @@ import Head from 'next/head'
 import AdToolBar from '../../../components/AdToolBar'
 import ProductForm from '../../../components/ProductForm'
 import Layout from '../../../components/Layout'
-import Type from '../../../models/Type'
-import Product from '../../../models/Product'
-import dbConnect from '../../../lib/dbConnect'
+import { getData } from '../../../lib/fetchData'
+import Grid from '@material-ui/core/Grid'
+import RedeemIcon from '@material-ui/icons/Redeem'
 
 export default function Edit_Product({ types, product }) {
   return (
@@ -15,26 +15,26 @@ export default function Edit_Product({ types, product }) {
       </Head>
       <AdToolBar select="Quản lý sản phẩm" />
       <Layout>
-        <ProductForm types={types} product={product} isNew={false} />
+        {product == null ?
+          <Grid
+            container
+            justifyContent="center"
+            direction="row"
+          >
+            <RedeemIcon style={{ fontSize: 400 }} />
+          </Grid>
+          :
+          <ProductForm types={types} product={product} isNew={false} />
+        }
       </Layout>
     </div>
   )
 }
 
 export async function getServerSideProps({ params }) {
-  await dbConnect()
+  const resultType = await getData('types?limit=all&name=all')
+  const product = await getData(`products/${params.id}`)
 
-  /* find all the data in our database */
-  const resultType = await Type.find({})
-  const types = resultType.map((doc) => {
-    const type = doc.toObject()
-    type._id = type._id.toString()
-    return type
-  })
-
-  const product = await Product.findById(params.id).lean()
-  product._id = product._id.toString()
-
-  return { props: { types: types, product: product } }
+  return { props: { types: resultType.types, product: product.data || null } }
 }
 
