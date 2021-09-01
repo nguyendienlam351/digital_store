@@ -49,7 +49,7 @@ const Home = ({ types, products }) => {
               Sản phẩm mới nhất
             </Typography>
           </Card>
-          <Link component="a" color="inherit" onClick={()=> router.push('/products')}>
+          <Link component="a" color="inherit" href="/products">
             <Typography variant="subtitle1">
               Tất cả sản phẩm
             </Typography>
