@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
+import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -237,9 +238,11 @@ export default function ProductForm({ types, product, isNew }) {
                 alignItems="flex-end"
                 className={classes.grid}
             >
-                <Button onClick={() => { router.push('/admin/products') }} variant="contained" color="secondary">
-                    Hủy
-                </Button>
+                <Link component="a" color="inherit" href="/admin/products">
+                    <Button variant="contained" style={{ backgroundColor: "#dc004e", color: '#ffffff' }}>
+                        Hủy
+                    </Button>
+                </Link>
                 <Button onClick={() => { handleSubmit() }}
                     variant="contained" color="primary">
                     {isNew ? "Thêm mới" : "Thay đổi"}

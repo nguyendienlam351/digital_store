@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TypeList({ types, isAll }) {
-    const classes = useStyles();
+    const classes = useStyles()
     const router = useRouter()
 
     const handleType = (id) => {

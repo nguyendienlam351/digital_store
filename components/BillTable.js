@@ -1,17 +1,17 @@
 import React from 'react'
-import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import VisibilityIcon from '@material-ui/icons/Visibility'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -27,12 +27,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 export default function BillTable(props) {
-    const router = useRouter()
-    const classes = useStyles();
-
-    const handleView = (id) => {
-        router.push(`/admin/bills/${id}`)
-    }
+    const classes = useStyles()
 
     return (
         <TableContainer component={Paper} className={classes.container}>
@@ -56,12 +51,11 @@ export default function BillTable(props) {
                             <TableCell align="right">{new Date(row.date).toLocaleString()}</TableCell>
                             <TableCell align="right">{row.phone}</TableCell>
                             <TableCell align="right">
-                                <IconButton
-                                    color="inherit"
-                                    onClick={() => { handleView(row._id) }}
-                                >
-                                    <VisibilityIcon />
-                                </IconButton>
+                                <Link component="a" color="inherit" href={`/admin/bills/${row._id}`}>
+                                    <IconButton color="inherit">
+                                        <VisibilityIcon />
+                                    </IconButton>
+                                </Link>
                             </TableCell>
                         </TableRow>
                     ))}

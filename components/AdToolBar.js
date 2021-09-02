@@ -1,5 +1,4 @@
 import { useState, useContext } from 'react'
-import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { DataContext } from '../store/GlobalState'
 import clsx from 'clsx'
@@ -13,6 +12,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
+import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,7 +84,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AdToolBar({ select }) {
-  const router = useRouter()
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -92,10 +91,10 @@ export default function AdToolBar({ select }) {
   const { auth } = state
 
   const handleLogout = () => {
-    Cookie.remove('refreshtoken', {path: '/'})
+    Cookie.remove('refreshtoken', { path: '/' })
     localStorage.removeItem('firstLogin')
     dispatch({ type: 'AUTH', payload: {} })
-}
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -105,42 +104,30 @@ export default function AdToolBar({ select }) {
     setAnchorEl(null);
   };
 
-  const handleSelect = (value) => {
-    switch (value) {
-      case 1:
-        router.push('/admin/products')
-        break;
-      case 2:
-        router.push('/admin/types')
-        break;
-      case 3:
-        router.push('/admin/bills')
-        break;
-    }
-  };
-
-
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Container maxWidth="lg">
           <Toolbar>
-          <IconButton
-              className={classes.menuButton}
-              color="inherit"
-              onClick={()=>router.push('/admin/products')}
-            >
+            <Link component="a" color="inherit" href="/admin/products">
+              <IconButton
+                className={classes.menuButton}
+                color="inherit">
                 <Image alt="logo" src="/favicon.ico" width={20} height={20} />
-            </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap  onClick={()=>router.push('/admin/products')}>
+              </IconButton>
+            </Link>
+            <Link className={classes.title} component="a" color="inherit" href="/admin/products">
+              <Typography variant="h6" noWrap>
                 Digital Store
-            </Typography>
+              </Typography>
+            </Link>
             {Object.keys(auth).length == 0 ?
-              <Button 
-              className={clsx(classes.button, classes.menuButton)}
-              onClick={()=>router.push('/admin/login')}>
-                Đăng nhập
-              </Button>
+              <Link component="a" color="inherit" href="/admin/login">
+                <Button
+                  className={clsx(classes.button, classes.menuButton)}>
+                  Đăng nhập
+                </Button>
+              </Link>
               :
               <div>
                 <Button className={clsx(classes.button, classes.menuButton)} onClick={handleClick}>
@@ -152,13 +139,25 @@ export default function AdToolBar({ select }) {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={() => handleSelect(1)}>Quản lý sản phẩm</MenuItem>
-                  <MenuItem onClick={() => handleSelect(2)}>Quản lý loại sản phẩm</MenuItem>
-                  <MenuItem onClick={() => handleSelect(3)}>Quản lý đơn hàng</MenuItem>
+                  <MenuItem>
+                    <Link component="a" color="inherit" href="/admin/products">
+                      Quản lý sản phẩm
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link component="a" color="inherit" href="/admin/types">
+                      Quản lý loại sản phẩm
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link component="a" color="inherit" href="/admin/bills">
+                      Quản lý đơn hàng
+                    </Link>
+                  </MenuItem>
                 </Menu>
-                <Button 
-                className={clsx(classes.button, classes.menuButton)}
-                onClick={()=>handleLogout()}>
+                <Button
+                  className={clsx(classes.button, classes.menuButton)}
+                  onClick={() => handleLogout()}>
                   Đăng xuất
                 </Button>
               </div>
@@ -166,6 +165,6 @@ export default function AdToolBar({ select }) {
           </Toolbar>
         </Container>
       </AppBar>
-    </div>
+    </div >
   );
 }

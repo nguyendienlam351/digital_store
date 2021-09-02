@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ToolBar from '../../components/ToolBar'
-import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Container from '@material-ui/core/Container'
@@ -61,7 +60,6 @@ const Products = (props) => {
       <Head>
         <title>All Product</title>
       </Head>
-      <CssBaseline />
       <ToolBar isAll={true} srch={props.search}/>
       <TypeList types={props.types} isAll={true}/>
       <Container maxWidth='md' className={classes.root}>

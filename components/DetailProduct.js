@@ -1,9 +1,7 @@
 import React, { useState, useContext } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import { DataContext } from '../store/GlobalState'
 import { addToCart } from '../store/Actions'
-import NumberFormat from 'react-number-format'
 import Link from '@material-ui/core/Link'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
@@ -30,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DetailProduct({ product }) {
     const classes = useStyles()
-    const router = useRouter()
     const { state, dispatch } = useContext(DataContext)
     const { cart } = state
     const [quant, setQuant] = useState(product.quantity !== 0 ? 1 : 0)
@@ -46,10 +43,10 @@ export default function DetailProduct({ product }) {
         }
         const newData = addToCart(cartProduct, cart)
 
-        if (newData.type) return dispatch({type: 'NOTIFY', payload:newData})
+        if (newData.type) return dispatch({ type: 'NOTIFY', payload: newData })
 
         dispatch({ type: 'ADD_CART', payload: newData.data })
-        dispatch({type: 'NOTIFY', payload:{ message: newData.message }})
+        dispatch({ type: 'NOTIFY', payload: { message: newData.message } })
     }
 
     const downQuant = () => {
@@ -81,16 +78,18 @@ export default function DetailProduct({ product }) {
                     <Typography className={classes.gridItem} variant="h6">
                         {"Loại sản phẩm: "}
                         <Link component="a" color="inherit"
-                            onClick={() => router.push(`/products?type=${product.type._id ? product.type._id : product.type}`)} >
+                            href={`/products?type=${product.type._id ? product.type._id : product.type}`} >
                             {product.type.name ? product.type.name : ''}
                         </Link>
                     </Typography>
                     <Typography className={classes.gridItem} variant="h6">
-                        Giá:
-                        <NumberFormat value={product.price} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
+                        {`Giá: ${product.price.toLocaleString('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        })}`}
                     </Typography>
                     <Typography className={classes.gridItem} variant="h6">
-                        Kho: {product.quantity}
+                        {`Kho: ${product.quantity}`}
                     </Typography>
                     <Grid
                         className={classes.gridItem}

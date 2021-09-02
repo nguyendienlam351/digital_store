@@ -1,6 +1,4 @@
 import React from 'react'
-import { useRouter } from 'next/router'
-import NumberFormat from 'react-number-format'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
@@ -25,64 +23,66 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CartProduct({product,upQuant,downQuant,deleteCart}) {
+export default function CartProduct({ product, upQuant, downQuant, deleteCart }) {
     const classes = useStyles()
-    const router = useRouter()
 
     return (
         <Card className={classes.root}>
-                <Grid
-                    container
-                    alignItems="center"
-                    item
-                    xs={4}>
-                    <CardMedia
-                        className={classes.media}
-                        image={product.image}
-                    />
-                </Grid>
-                <Grid item xs={7}>
-                    <CardContent >
-                        <Link component="a" color="inherit" onClick={()=> router.push(`/products/${product._id}`)}>
+            <Grid
+                container
+                alignItems="center"
+                item
+                xs={4}>
+                <CardMedia
+                    className={classes.media}
+                    image={product.image}
+                />
+            </Grid>
+            <Grid item xs={7}>
+                <CardContent >
+                    <Link component="a" color="inherit" href={`/products/${product._id}`}>
                         <Typography variant="h6">
                             {product.name}
                         </Typography>
-                        </Link>
-                        <Typography variant="subtitle1">
-                            Giá: <NumberFormat value={product.price} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            Kho: {product.quantity}
-                        </Typography>
-                        <Grid
-                            container
-                            direction="row"
-                            alignItems="center">
-                            <IconButton
-                            onClick={()=>downQuant(product._id)}
-                                disabled={product.cart_quantity == 1}
-                                color="inherit"
-                            >
-                                <ArrowLeftIcon color="primary" />
-                            </IconButton>
-                            <Typography variant="subtitle1">
-                                {product.cart_quantity}
-                            </Typography>
-                            <IconButton
-                            onClick={()=>upQuant(product._id)}
-                                disabled={product.cart_quantity == product.quantity}
-                                color="inherit"
-                            >
-                                <ArrowRightIcon color="primary" />
-                            </IconButton>
-                        </Grid>
-                    </CardContent>
-                </Grid>
-                <Grid item xs={1}>
-                        <IconButton onClick={()=> deleteCart(product._id)}>
-                            <DeleteIcon />
+                    </Link>
+                    <Typography variant="subtitle1">
+                        {`Giá: ${product.price.toLocaleString('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        })}`}
+                    </Typography>
+                    <Typography variant="subtitle1">
+                        {`Kho: ${product.quantity}`}
+                    </Typography>
+                    <Grid
+                        container
+                        direction="row"
+                        alignItems="center">
+                        <IconButton
+                            onClick={() => downQuant(product._id)}
+                            disabled={product.cart_quantity == 1}
+                            color="inherit"
+                        >
+                            <ArrowLeftIcon color="primary" />
                         </IconButton>
-                </Grid>
+                        <Typography variant="subtitle1">
+                            {product.cart_quantity}
+                        </Typography>
+                        <IconButton
+                            onClick={() => upQuant(product._id)}
+                            disabled={product.cart_quantity == product.quantity}
+                            color="inherit"
+                        >
+                            <ArrowRightIcon color="primary" />
+                        </IconButton>
+                    </Grid>
+                </CardContent>
+            </Grid>
+            <Grid item xs={1}>
+                <IconButton onClick={() => deleteCart(product._id)}>
+                    <DeleteIcon />
+                </IconButton>
+            </Grid>
         </Card>
     )
 }

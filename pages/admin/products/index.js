@@ -15,6 +15,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 import SearchIcon from '@material-ui/icons/Search'
+import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -74,10 +75,6 @@ const Index = (props) => {
         filterSearch({ router, search: search ? search.toLowerCase() : 'all' })
     }, [search])
 
-    const handleAdd = () => {
-        router.push('/admin/products/new')
-    }
-
     const handleLoadmore = () => {
         setPage(page + 1)
         filterSearch({ router, page: page + 1 })
@@ -127,9 +124,11 @@ const Index = (props) => {
                             }
                         />
                     </div>
-                    <Button onClick={() => { handleAdd() }} variant="contained" color="primary">
-                        Thêm mới
-                    </Button>
+                    <Link component="a" color="inherit" href="/admin/products/new">
+                        <Button variant="contained" color="primary">
+                            Thêm mới
+                        </Button>
+                    </Link>
                 </Grid>
                 <ProductTable
                     products={products}

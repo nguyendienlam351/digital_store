@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import filterSearch from '../lib/filterSearch'
@@ -15,6 +15,7 @@ import Badge from '@material-ui/core/Badge'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import ClearIcon from '@material-ui/icons/Clear'
 import SearchIcon from '@material-ui/icons/Search'
+import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ToolBar({isAll,srch}) {
+export default function ToolBar({ isAll, srch }) {
   const classes = useStyles()
   const router = useRouter()
   const { state, dispatch } = useContext(DataContext)
@@ -78,26 +79,29 @@ export default function ToolBar({isAll,srch}) {
   const [search, setSearch] = useState(srch == null || srch == 'all' ? '' : srch)
 
   useEffect(() => {
-    if(search !== '' || isAll){
-    router.pathname = 'products/'
-    filterSearch({router, search: search ? search : 'all'})}
-},[search])
+    if (search !== '' || isAll) {
+      router.pathname = 'products/'
+      filterSearch({ router, search: search ? search : 'all' })
+    }
+  }, [search])
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Container maxWidth="lg">
           <Toolbar>
-            <IconButton
-              className={classes.menuButton}
-              color="inherit"
-              onClick={()=>router.push('/')}
-            >
+            <Link component="a" color="inherit" href="/">
+              <IconButton
+                className={classes.menuButton}
+                color="inherit">
                 <Image alt="logo" src="/favicon.ico" width={20} height={20} />
-            </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap  onClick={()=>router.push('/')}>
-                Digital Store
+              </IconButton>
+            </Link>
+            <Link className={classes.title} component="a" color="inherit" href="/">
+            <Typography variant="h6" noWrap onClick={() => router.push('/')}>
+              Digital Store
             </Typography>
+            </Link>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -127,14 +131,14 @@ export default function ToolBar({isAll,srch}) {
                 }
               />
             </div>
+            <Link component="a" color="inherit" href="/cart">
             <IconButton
               className={classes.menuButton}
-              color="inherit"
-              onClick={()=>router.push('/cart')}
-            >
+              color="inherit">
               <ShoppingCartIcon />
-              <Badge badgeContent={cart.length !== 0 ? cart.length : null } color="secondary"/>
+              <Badge badgeContent={cart.length !== 0 ? cart.length : null} color="error" />
             </IconButton>
+            </Link>
           </Toolbar>
         </Container>
       </AppBar>

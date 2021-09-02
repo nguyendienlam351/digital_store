@@ -165,7 +165,10 @@ export default function TypeForm({ id, form, setForm, handleClear }) {
                     alignItems="flex-end"
                     className={classes.grid}
                 >
-                    <Button onClick={() => { handleClear() }} variant="contained" color="secondary">
+                    <Button
+                        onClick={() => { handleClear() }}
+                        variant="contained"
+                        style={{ backgroundColor: "#dc004e", color: '#ffffff' }}>
                         Hủy
                     </Button>
                     <Button onClick={() => { handleSubmit() }}

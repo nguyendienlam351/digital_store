@@ -4,7 +4,6 @@ import { sendBillEmail } from '../lib/sendEmail'
 import { getData, postData } from '../lib/fetchData'
 import { DataContext } from '../store/GlobalState'
 import { increase, decrease, deleteToCart } from '../store/Actions'
-import NumberFormat from 'react-number-format'
 import { makeStyles } from '@material-ui/core/styles'
 import ToolBar from '../components/ToolBar'
 import Grid from '@material-ui/core/Grid'
@@ -84,7 +83,7 @@ const Cart = ({ products }) => {
 
     useEffect(() => {
         if (products) {
-            updateCart()
+            updateCart(products)
         }
 
     }, [])
@@ -104,7 +103,7 @@ const Cart = ({ products }) => {
     useEffect(() => {
         const cartLocal = JSON.parse(localStorage.getItem('local_cart'))
         if (cartLocal && cartLocal.length > 0) {
-            updateCart()
+            updateCart(cartLocal)
         }
     }, [callback])
 
@@ -174,8 +173,8 @@ const Cart = ({ products }) => {
         })
     }
 
-    
-    const updateCart = async () => {
+
+    const updateCart = async (products) => {
         let newArr = []
         for (const item of products) {
             const res = await getData(`products/${item._id}`)
@@ -268,11 +267,10 @@ const Cart = ({ products }) => {
                                 rows={3}
                             />
                             <Typography className={classes.item} variant="h6">
-                                Tổng giá trị: <NumberFormat
-                                    value={totalPrice}
-                                    displayType={'text'}
-                                    thousandSeparator={true}
-                                    suffix={' đ'} />
+                                {`Tổng giá trị: ${totalPrice.toLocaleString('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND'
+                                })}`}
                             </Typography>
                             <Button disabled={!valid()} onClick={() => { setOpen(true) }} variant="contained" color="primary">
                                 Đặt hàng
@@ -317,10 +315,12 @@ export async function getServerSideProps({ query }) {
 
     const bill = await getData(`bills/${query.id}`)
 
-    return { props: { 
-        products: 
-        bill.data ? bill.data.product : null 
-    } }
+    return {
+        props: {
+            products:
+                bill.data ? bill.data.product : null
+        }
+    }
 }
 
 export default Cart

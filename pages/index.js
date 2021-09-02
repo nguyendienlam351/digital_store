@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import { getData } from '../lib/fetchData'
 import TypeList from '../components/TypeList'
 import ProductList from '../components/ProductList'
@@ -27,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = ({ types, products }) => {
   const classes = useStyles()
-  const router = useRouter()
 
   return (
     <div>

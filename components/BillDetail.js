@@ -1,7 +1,6 @@
 import React from 'react'
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import NumberFormat from 'react-number-format';
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 
 
 export default function BillDetail({ bill }) {
@@ -24,10 +23,10 @@ export default function BillDetail({ bill }) {
                 alignItems="center"
             >
                 <Grid item xs={4}>
-                    <Typography variant="subtitle1">Mã đơn hàng: {bill._id}</Typography>
+                    <Typography variant="subtitle1"><b>Mã đơn hàng: </b>{bill._id}</Typography>
                 </Grid>
                 <Grid item xs={8}>
-                    <Typography variant="subtitle1">Tên khách hàng: {bill.name}</Typography>
+                    <Typography variant="subtitle1"><b>Tên khách hàng: </b>{bill.name}</Typography>
                 </Grid>
             </Grid>
             <Grid
@@ -37,14 +36,17 @@ export default function BillDetail({ bill }) {
                 alignItems="center"
             >
                 <Grid item xs={4}>
-                    <Typography variant="subtitle1">Số điện thoại: {bill.phone}</Typography>
+                    <Typography variant="subtitle1"><b>Số điện thoại: </b>{bill.phone}</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                    <Typography variant="subtitle1">Ngày đặt hàng: {new Date(bill.date).toLocaleString()}</Typography>
+                    <Typography variant="subtitle1"><b>Ngày đặt hàng: </b>{new Date(bill.date).toLocaleString()}</Typography>
                 </Grid>
                 <Grid item xs={4}>
                     <Typography variant="subtitle1">
-                        Tổng giá trị: <NumberFormat value={totalPrice} displayType={'text'} thousandSeparator={true} suffix={' đ'} />
+                        <b>Tổng giá trị: </b> {totalPrice.toLocaleString('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        })}
                     </Typography>
                 </Grid>
             </Grid>
@@ -54,10 +56,10 @@ export default function BillDetail({ bill }) {
                 justifyContent="space-between"
                 alignItems="center"
             > <Grid item xs={4}>
-                    <Typography variant="subtitle1">Email: {bill.email}</Typography>
+                    <Typography variant="subtitle1"><b>Email: </b>{bill.email}</Typography>
                 </Grid>
                 <Grid item xs={8}>
-                    <Typography variant="subtitle1">Địa chỉ: {bill.address}</Typography>
+                    <Typography variant="subtitle1"><b>Địa chỉ: </b>{bill.address}</Typography>
                 </Grid>
             </Grid>
         </Grid>
