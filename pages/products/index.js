@@ -16,10 +16,10 @@ import { useRouter } from 'next/router'
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(3, 0, 3, 0),
+    padding: theme.spacing(1, 0)
   },
   grid: {
-    margin: theme.spacing(3, 0, 3, 0),
+    margin: theme.spacing(2, 0)
   },
   cart: {
     padding: theme.spacing(1),

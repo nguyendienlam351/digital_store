@@ -18,8 +18,13 @@ import SearchIcon from '@material-ui/icons/Search'
 import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles((theme) => ({
-    grid: {
+    root: {
         marginBottom: theme.spacing(3),
+    },
+    grid: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%'
     },
     search: {
         position: 'relative',
@@ -28,7 +33,8 @@ const useStyles = makeStyles((theme) => ({
         border: "1px solid #3f51b5",
         marginLeft: 0,
         width: '100%',
-        [theme.breakpoints.up('sm')]: {
+        marginRight: theme.spacing(1),
+        [theme.breakpoints.up('md')]: {
             marginLeft: theme.spacing(1),
             width: 'auto',
         },
@@ -41,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-
     },
     inputRoot: {
         color: 'inherit',
@@ -51,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
         transition: theme.transitions.create('width'),
         width: '100%',
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             width: '60ch',
         },
     },
@@ -92,43 +97,50 @@ const Index = (props) => {
                     direction="row"
                     justifyContent="space-between"
                     alignItems="flex-end"
-                    className={classes.grid}
+                    className={classes.root}
                 >
-                    <Typography variant="h6">
-                        Quản lý sản phẩm:
-                    </Typography>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
+                    <Grid item xs={12} md={3}>
+                        <Typography variant="h6">
+                            Quản lý sản phẩm:
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={9}>
+                        <div className={classes.grid}>
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                <InputBase
+                                    fullWidth
+                                    placeholder="Search…"
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    value={search.toLowerCase()}
+                                    onChange={e => setSearch(e.target.value)}
+                                    endAdornment={
+                                        !search ? null :
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    className={classes.menuButton}
+                                                    edge="end"
+                                                    onClick={() => setSearch('')}
+                                                >
+                                                    <ClearIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                    }
+                                />
+                            </div>
+                            <Button variant="contained" color="primary">
+                                <Link component="a" noWrap color="inherit" href="/admin/products/new">
+                                    Thêm mới
+                                </Link>
+                            </Button>
                         </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            value={search.toLowerCase()}
-                            onChange={e => setSearch(e.target.value)}
-                            endAdornment={
-                                !search ? null :
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            className={classes.menuButton}
-                                            edge="end"
-                                            onClick={() => setSearch('')}
-                                        >
-                                            <ClearIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                            }
-                        />
-                    </div>
-                    <Link component="a" color="inherit" href="/admin/products/new">
-                        <Button variant="contained" color="primary">
-                            Thêm mới
-                        </Button>
-                    </Link>
+                    </Grid>
                 </Grid>
                 <ProductTable
                     products={products}

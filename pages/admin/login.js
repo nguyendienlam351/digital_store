@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         paddingTop: theme.spacing(3),
+        alignItems: 'center',
     },
     item: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
-        width: "40%"
     }
 }));
 
@@ -54,10 +54,10 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
-        dispatch({type: 'NOTIFY', payload:{loading:true}})
+        dispatch({ type: 'NOTIFY', payload: { loading: true } })
         const res = await postData('auth/login', userData)
 
-        if (res.err) return dispatch({type: 'NOTIFY', payload: {type: "error",message: "Đăng nhập không thành công"}})
+        if (res.err) return dispatch({ type: 'NOTIFY', payload: { type: "error", message: "Đăng nhập không thành công" } })
 
         dispatch({
             type: 'AUTH', payload: {
@@ -72,8 +72,8 @@ const Login = () => {
         })
 
         localStorage.setItem('firstLogin', true)
-        
-        dispatch({type: 'NOTIFY', payload:{message: "Đăng nhập thành công"}})
+
+        dispatch({ type: 'NOTIFY', payload: { message: "Đăng nhập thành công" } })
     }
 
     return (
@@ -81,14 +81,14 @@ const Login = () => {
             <Head>
                 <title>Login</title>
             </Head>
-            <Container className={classes.root}>
+            <Container maxWidth='sm' className={classes.root}>
                 <Grid
                     container
                     direction="column"
                     justifyContent="flex-start"
                     alignItems="center"
                 >
-                    <Typography variant="h2">Digital Store</Typography>
+                    <Typography align='center' variant="h2">Digital Store</Typography>
                     <Image src="/favicon.ico"
                         alt="logo"
                         width={150}
@@ -102,6 +102,7 @@ const Login = () => {
                     alignItems="center">
                     <TextField
                         className={classes.item}
+                        fullWidth
                         label="Tài khoản"
                         variant="outlined"
                         placeholder="Nhập tài khoản..."
@@ -109,28 +110,32 @@ const Login = () => {
                         value={user_name}
                         onChange={handleChange}
                     />
-                    <FormControl className={classes.item} variant="outlined">
-                        <InputLabel>Mật khẩu</InputLabel>
-                        <OutlinedInput
-                            type={showPassword ? 'text' : 'password'}
-                            endAdornment={
-                                <InputAdornment posiFtion="end">
-                                    <IconButton
-                                        onClick={() => { setShowPassword(!showPassword) }}
-                                        aria-label="toggle password visibility"
-                                        edge="end"
-                                    >
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                            labelWidth={70}
-                            name="password"
-                            value={password}
-                            onChange={handleChange}
-                        />
-                    </FormControl>
-                    <Button className={classes.item} onClick={() => { handleLogin() }} variant="contained" color="primary">
+                    <TextField
+                        className={classes.item}
+                        fullWidth
+                        label="Mật khẩu"
+                        variant="outlined"
+                        placeholder="Nhập mật khẩu..."
+                        name="password"
+                        value={password}
+                        onChange={handleChange}
+                        type={showPassword ? 'text' : 'password'}
+                        InputProps={{
+                            endAdornment: <InputAdornment posiFtion="end">
+                                <IconButton
+                                    onClick={() => { setShowPassword(!showPassword) }}
+                                >
+                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>,
+                        }}
+                    />
+                    <Button 
+                    className={classes.item}
+                    fullWidth 
+                    onClick={() => { handleLogin() }} 
+                    variant="contained" 
+                    color="primary">
                         Đăng nhập
                     </Button>
                 </Grid>

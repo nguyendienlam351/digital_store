@@ -13,10 +13,10 @@ import Link from '@material-ui/core/Link'
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(3, 0, 3, 0),
+    padding: theme.spacing(1, 0, 4)
   },
   grid: {
-    margin: theme.spacing(3, 0, 3, 0),
+    margin: theme.spacing(2, 0),
   },
   cart: {
     padding: theme.spacing(1),
@@ -39,7 +39,7 @@ const Home = ({ types, products }) => {
           container
           direction="row"
           justifyContent="space-between"
-          alignItems="flex-end"
+          alignItems="center"
           className={classes.grid}
         >
           <Card className={classes.cart}>
@@ -65,7 +65,7 @@ export async function getServerSideProps() {
   const resultType = await getData('types?limit=all&name=all')
 
   const resultProduct = await getData('products?limit=8&type=all&name=all')
-  
+
   return {
     props: {
       types: resultType.types,

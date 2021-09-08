@@ -7,8 +7,7 @@ export default function ProductList({ products }) {
     return (
         <Grid
             container
-            spacing={1}
-            justifyContent='center'
+            spacing={2}
         >
             {products.length === 0 ?
                 <Typography variant="h6">
@@ -16,7 +15,7 @@ export default function ProductList({ products }) {
                 </Typography>
                 :
                 products.map((product) => (
-                    <Grid key={product._id} item xs={3}>
+                    <Grid key={product._id} item xs={12} sm={6} md={4} lg={3}>
                         <Product product={product} />
                     </Grid>
                 ))

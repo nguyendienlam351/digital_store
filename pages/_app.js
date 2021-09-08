@@ -6,6 +6,16 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../theme/index";
 import { DataProvider } from "../store/GlobalState";
 import Notify from "../components/Notify";
+import "nprogress/nprogress.css";
+import "../styles/nprogress.css";
+import dynamic from 'next/dynamic'
+
+const TopProgressBar = dynamic(
+  () => {
+    return import("../components/TopProgressBar");
+  },
+  { ssr: false },
+);
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -20,6 +30,7 @@ export default function MyApp(props) {
 
   return (
     <React.Fragment>
+      <TopProgressBar />
       <Head>
         <title>My page</title>
         <meta

@@ -12,7 +12,7 @@ import { useRouter } from 'next/router'
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(0.5, 0, 0.5, 0),
+        padding: theme.spacing(0.5, 0),
     },
     item: {
         margin: theme.spacing(1),
@@ -34,7 +34,7 @@ export default function TypeList({ types, isAll }) {
     return (
         <div className={classes.div}>
             <Container maxWidth="md">
-                <Grid xs={12} container className={classes.root} justifyContent="center" item>
+                <Grid container className={classes.root} justifyContent="center" item>
                     {!isAll ? null :
                         <Card className={classes.item} key={'all'} >
                             <CardActionArea onClick={() => handleType('all')}>

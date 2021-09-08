@@ -15,11 +15,12 @@ import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
-        padding: theme.spacing(3, 0, 3, 0),
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%'
     },
     textField: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
+        margin: theme.spacing(1,0),
         width: '100%',
     },
     button: {
@@ -151,11 +152,11 @@ export default function ProductForm({ types, product, isNew }) {
                 container
                 direction="row"
             >
-                <Grid item xs={5}
-                    direction="column"
-                    alignItems="center"
+                <Grid
+                    item xs={12} md={5}
                     container
-                    justifyContent="center" >
+                    direction="column"
+                    alignItems="center" >
                     <Image alt="product image" src={form.image == '' ? "/image.png" : form.image} width={300} height={300} />
                     <div className={classes.div}>
                         <input
@@ -173,7 +174,7 @@ export default function ProductForm({ types, product, isNew }) {
                         </label>
                     </div>
                 </Grid>
-                <Grid item xs={7} >
+                <Grid item xs={12} md={7} >
                     <TextField
                         className={classes.textField}
                         variant="outlined"
@@ -231,13 +232,7 @@ export default function ProductForm({ types, product, isNew }) {
                 name="description"
                 onChange={handleChange}
             />
-            <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="flex-end"
-                className={classes.grid}
-            >
+            <div className={classes.grid}>
                 <Link component="a" color="inherit" href="/admin/products">
                     <Button variant="contained" style={{ backgroundColor: "#dc004e", color: '#ffffff' }}>
                         Hủy
@@ -247,7 +242,7 @@ export default function ProductForm({ types, product, isNew }) {
                     variant="contained" color="primary">
                     {isNew ? "Thêm mới" : "Thay đổi"}
                 </Button>
-            </Grid>
+            </div>
         </div>
     )
 }

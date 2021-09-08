@@ -114,43 +114,50 @@ const Index = (props) => {
                     alignItems="flex-end"
                     className={classes.grid}
                 >
-                    <Typography variant="h6">
-                        Quản lý loại sản phẩm:
-                    </Typography>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
+                    <Grid item xs={12} md={4}>
+                        <Typography variant="h6">
+                            Quản lý loại sản phẩm:
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={8}>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                                placeholder="Search…"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'search' }}
+                                value={search.toLowerCase()}
+                                onChange={e => setSearch(e.target.value)}
+                                endAdornment={
+                                    !search ? null :
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                className={classes.menuButton}
+                                                edge="end"
+                                                onClick={() => setSearch('')}
+                                            >
+                                                <ClearIcon />
+                                            </IconButton>
+                                        </InputAdornment>
+                                }
+                            />
                         </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            value={search.toLowerCase()}
-                            onChange={e => setSearch(e.target.value)}
-                            endAdornment={
-                                !search ? null :
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            className={classes.menuButton}
-                                            edge="end"
-                                            onClick={() => setSearch('')}
-                                        >
-                                            <ClearIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                            }
-                        />
-                    </div>
+                    </Grid>
                 </Grid>
                 <Grid
                     className={classes.grid}
                     container
                     direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                    spacing={2}
                 >
-                    <Grid item xs={7}>
+                    <Grid item xs={12} md={7}>
                         <TypeTable
                             types={types}
                             handleSelect={handleSelect}
@@ -158,8 +165,8 @@ const Index = (props) => {
                             page={page}
                             length={props.length} />
                     </Grid>
-                    <Grid item xs={5}>
-                        <TypeForm
+                    <Grid item xs={12} md={5}>
+                        <TypeForm 
                             id={id}
                             form={form}
                             setForm={setForm}

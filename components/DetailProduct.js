@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
     },
     grid: {
-        padding: theme.spacing(3, 0, 3, 0),
+        padding: theme.spacing(3, 0),
     },
     gridItem: {
         paddingTop: theme.spacing(1),
@@ -70,11 +70,14 @@ export default function DetailProduct({ product }) {
                 className={classes.grid}
                 container
                 direction="row"
+                alignItems="center"
+                justifyContent= "center"
+                 spacing={4}
             >
-                <Grid item xs={5} >
+                <Grid item sm={5}>
                     <Image alt="product image" src={product.image} width={320} height={320} />
                 </Grid>
-                <Grid item xs={7} >
+                <Grid item sm={7}>
                     <Typography className={classes.gridItem} variant="h6">
                         {"Loại sản phẩm: "}
                         <Link component="a" color="inherit"

@@ -30,11 +30,10 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
     },
     grid: {
-        padding: theme.spacing(3, 0, 3, 0),
+        padding: theme.spacing(3, 0),
     },
     textField: {
-        paddingTop: theme.spacing(1),
-        paddingBottom: theme.spacing(1),
+        paddingBottom: theme.spacing(2),
         width: '100%',
     },
     item: {
@@ -201,82 +200,83 @@ const Cart = ({ products }) => {
                     container
                     justifyContent="center"
                     direction="row"
-                >{cart.length === 0 ?
-                    <ShoppingCartIcon style={{ fontSize: 400 }} />
-                    :
-                    <>
-                        <Grid item xs={7} >
-                            {
-                                cart.map((product) => (
-                                    <CartProduct
-                                        key={product._id}
-                                        product={product}
-                                        upQuant={upQuant}
-                                        downQuant={downQuant}
-                                        deleteCart={deleteCart} />
-                                ))
-                            }
-                        </Grid>
-                        <Grid
-                            container
-                            direction="column"
-                            justifyContent="flex-start"
-                            alignItems="center"
-                            item
-                            xs={5} >
-                            <TextField
-                                className={classes.textField}
-                                name="name"
-                                value={name}
-                                onChange={handleChange}
-                                label="Họ tên"
-                                variant="outlined"
-                                placeholder="Nhập họ và tên..."
-                            />
-                            <TextField
-                                className={classes.textField}
-                                type="email"
-                                name="email"
-                                value={email}
-                                onChange={handleChange}
-                                label="Email"
-                                variant="outlined"
-                                placeholder="Nhập email"
-                            />
-                            <FormControl
-                                className={classes.textField}
-                                variant="outlined">
-                                <InputLabel>Số điện thoại</InputLabel>
-                                <OutlinedInput
-                                    labelWidth={110}
-                                    name="phone"
-                                    value={phone}
+                    spacing={2}>
+                    {cart.length === 0 ?
+                        <ShoppingCartIcon style={{ fontSize: 400 }} />
+                        :
+                        <>
+                            <Grid item sm={12} md={7}>
+                                {
+                                    cart.map((product) => (
+                                        <CartProduct
+                                            key={product._id}
+                                            product={product}
+                                            upQuant={upQuant}
+                                            downQuant={downQuant}
+                                            deleteCart={deleteCart} />
+                                    ))
+                                }
+                            </Grid>
+                            <Grid
+                                container
+                                direction="column"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                item
+                                sm={12} md={5} >
+                                <TextField
+                                    className={classes.textField}
+                                    name="name"
+                                    value={name}
                                     onChange={handleChange}
-                                    inputComponent={TextMaskCustom}
+                                    label="Họ tên"
+                                    variant="outlined"
+                                    placeholder="Nhập họ và tên..."
                                 />
-                            </FormControl>
-                            <TextField
-                                className={classes.textField}
-                                name="address"
-                                value={address}
-                                onChange={handleChange}
-                                label="Địa chỉ"
-                                variant="outlined"
-                                placeholder="Nhập địa chỉ..."
-                                multiline
-                                rows={3}
-                            />
-                            <Typography className={classes.item} variant="h6">
-                                {`Tổng giá trị: ${totalPrice.toLocaleString('vi-VN', {
-                                    style: 'currency',
-                                    currency: 'VND'
-                                })}`}
-                            </Typography>
-                            <Button disabled={!valid()} onClick={() => { setOpen(true) }} variant="contained" color="primary">
-                                Đặt hàng
-                            </Button>
-                        </Grid>
-                    </>
+                                <TextField
+                                    className={classes.textField}
+                                    type="email"
+                                    name="email"
+                                    value={email}
+                                    onChange={handleChange}
+                                    label="Email"
+                                    variant="outlined"
+                                    placeholder="Nhập email"
+                                />
+                                <FormControl
+                                    className={classes.textField}
+                                    variant="outlined">
+                                    <InputLabel>Số điện thoại</InputLabel>
+                                    <OutlinedInput
+                                        labelWidth={110}
+                                        name="phone"
+                                        value={phone}
+                                        onChange={handleChange}
+                                        inputComponent={TextMaskCustom}
+                                    />
+                                </FormControl>
+                                <TextField
+                                    className={classes.textField}
+                                    name="address"
+                                    value={address}
+                                    onChange={handleChange}
+                                    label="Địa chỉ"
+                                    variant="outlined"
+                                    placeholder="Nhập địa chỉ..."
+                                    multiline
+                                    rows={3}
+                                />
+                                <Typography className={classes.item} variant="h6">
+                                    {`Tổng giá trị: ${totalPrice.toLocaleString('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    })}`}
+                                </Typography>
+                                <Button disabled={!valid()} onClick={() => { setOpen(true) }} variant="contained" color="primary">
+                                    Đặt hàng
+                                </Button>
+                            </Grid>
+                        </>
                     }
                 </Grid>
             </Container>

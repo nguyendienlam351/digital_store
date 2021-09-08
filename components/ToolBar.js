@@ -40,12 +40,12 @@ const useStyles = makeStyles((theme) => ({
     },
     marginLeft: 0,
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing(1),
       width: 'auto',
     },
   },
-  searchIcon: {
+  icon: {
     padding: theme.spacing(0, 2),
     height: '100%',
     position: 'absolute',
@@ -61,8 +61,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: '60ch',
       '&:focus': {
         width: '65ch',
@@ -90,23 +89,24 @@ export default function ToolBar({ isAll, srch }) {
       <AppBar position="static">
         <Container maxWidth="lg">
           <Toolbar>
-            <Link component="a" color="inherit" href="/">
-              <IconButton
-                className={classes.menuButton}
-                color="inherit">
+            <IconButton
+              className={classes.menuButton}
+              color="inherit">
+              <Link component="a" color="inherit" href="/">
                 <Image alt="logo" src="/favicon.ico" width={20} height={20} />
-              </IconButton>
-            </Link>
-            <Link className={classes.title} component="a" color="inherit" href="/">
-            <Typography variant="h6" noWrap onClick={() => router.push('/')}>
-              Digital Store
+              </Link>
+            </IconButton>
+            <Typography className={classes.title} variant="h6" noWrap>
+              <Link component="a" color="inherit" href="/">
+                Digital Store
+              </Link>
             </Typography>
-            </Link>
             <div className={classes.search}>
-              <div className={classes.searchIcon}>
+              <div className={classes.icon}>
                 <SearchIcon />
               </div>
               <InputBase
+                fullWidth
                 placeholder="Search…"
                 classes={{
                   root: classes.inputRoot,
@@ -121,9 +121,10 @@ export default function ToolBar({ isAll, srch }) {
                   !search ? null :
                     <InputAdornment position="end">
                       <IconButton
-                        className={classes.menuButton}
+                        style={{ marginRight: "10px" }}
                         edge="end"
                         onClick={() => setSearch('')}
+                        size="small"
                       >
                         <ClearIcon />
                       </IconButton>
@@ -131,14 +132,18 @@ export default function ToolBar({ isAll, srch }) {
                 }
               />
             </div>
-            <Link component="a" color="inherit" href="/cart">
             <IconButton
               className={classes.menuButton}
               color="inherit">
-              <ShoppingCartIcon />
-              <Badge badgeContent={cart.length !== 0 ? cart.length : null} color="error" />
+              <Link component="a" color="inherit" href="/cart">
+                <Badge
+                  badgeContent={cart.length !== 0 ? cart.length : null}
+                  color="error"
+                  overlap="circular">
+                  <ShoppingCartIcon />
+                </Badge>
+              </Link>
             </IconButton>
-            </Link>
           </Toolbar>
         </Container>
       </AppBar>

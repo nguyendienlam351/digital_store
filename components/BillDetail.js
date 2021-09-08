@@ -22,10 +22,10 @@ export default function BillDetail({ bill }) {
                 justifyContent="space-between"
                 alignItems="center"
             >
-                <Grid item xs={4}>
+                <Grid item md={4}>
                     <Typography variant="subtitle1"><b>Mã đơn hàng: </b>{bill._id}</Typography>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item md={8}>
                     <Typography variant="subtitle1"><b>Tên khách hàng: </b>{bill.name}</Typography>
                 </Grid>
             </Grid>
@@ -35,13 +35,13 @@ export default function BillDetail({ bill }) {
                 justifyContent="space-between"
                 alignItems="center"
             >
-                <Grid item xs={4}>
+                <Grid item md={4}>
                     <Typography variant="subtitle1"><b>Số điện thoại: </b>{bill.phone}</Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item md={4}>
                     <Typography variant="subtitle1"><b>Ngày đặt hàng: </b>{new Date(bill.date).toLocaleString()}</Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item md={4}>
                     <Typography variant="subtitle1">
                         <b>Tổng giá trị: </b> {totalPrice.toLocaleString('vi-VN', {
                             style: 'currency',
@@ -55,10 +55,10 @@ export default function BillDetail({ bill }) {
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
-            > <Grid item xs={4}>
+            > <Grid item md={4}>
                     <Typography variant="subtitle1"><b>Email: </b>{bill.email}</Typography>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item md={8}>
                     <Typography variant="subtitle1"><b>Địa chỉ: </b>{bill.address}</Typography>
                 </Grid>
             </Grid>

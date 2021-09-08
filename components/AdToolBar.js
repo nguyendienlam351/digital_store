@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-    margin: theme.spacing(0, 1, 0, 1),
+    margin: theme.spacing(0, 1),
   },
   title: {
     flexGrow: 1,
@@ -28,57 +28,12 @@ const useStyles = makeStyles((theme) => ({
       display: 'block',
     },
   },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '60ch',
-      '&:focus': {
-        width: '65ch',
-      },
-    },
-  },
   button: {
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 1),
     color: "#3f51b5",
     '&:hover': {
       color: alpha(theme.palette.common.white, 1),
-    },
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    width: '40ch',
-    [theme.breakpoints.down('ms')]: {
-      width: '30ch',
     },
   },
 }));
@@ -109,29 +64,32 @@ export default function AdToolBar({ select }) {
       <AppBar position="static">
         <Container maxWidth="lg">
           <Toolbar>
-            <Link component="a" color="inherit" href="/admin/products">
-              <IconButton
-                className={classes.menuButton}
-                color="inherit">
+            <IconButton
+              className={classes.menuButton}
+              color="inherit">
+              <Link component="a" color="inherit" href="/admin/products">
                 <Image alt="logo" src="/favicon.ico" width={20} height={20} />
-              </IconButton>
-            </Link>
+              </Link>
+            </IconButton>
             <Link className={classes.title} component="a" color="inherit" href="/admin/products">
               <Typography variant="h6" noWrap>
                 Digital Store
               </Typography>
             </Link>
+            <div className={classes.root} />
             {Object.keys(auth).length == 0 ?
-              <Link component="a" color="inherit" href="/admin/login">
-                <Button
-                  className={clsx(classes.button, classes.menuButton)}>
+              <Button
+                className={clsx(classes.button, classes.menuButton)}>
+                <Link component="a" color="inherit" href="/admin/login" noWrap>
                   Đăng nhập
-                </Button>
-              </Link>
+                </Link>
+              </Button>
               :
-              <div>
+              <>
                 <Button className={clsx(classes.button, classes.menuButton)} onClick={handleClick}>
-                  {select}
+                  <Typography variant="button" noWrap>
+                    {select}
+                  </Typography>
                 </Button>
                 <Menu
                   anchorEl={anchorEl}
@@ -140,17 +98,17 @@ export default function AdToolBar({ select }) {
                   onClose={handleClose}
                 >
                   <MenuItem>
-                    <Link component="a" color="inherit" href="/admin/products">
+                    <Link component="a" color="inherit" href="/admin/products" noWrap>
                       Quản lý sản phẩm
                     </Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link component="a" color="inherit" href="/admin/types">
+                    <Link component="a" color="inherit" href="/admin/types" noWrap>
                       Quản lý loại sản phẩm
                     </Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link component="a" color="inherit" href="/admin/bills">
+                    <Link component="a" color="inherit" href="/admin/bills" noWrap>
                       Quản lý đơn hàng
                     </Link>
                   </MenuItem>
@@ -158,9 +116,11 @@ export default function AdToolBar({ select }) {
                 <Button
                   className={clsx(classes.button, classes.menuButton)}
                   onClick={() => handleLogout()}>
-                  Đăng xuất
+                  <Typography variant="button" noWrap>
+                    Đăng xuất
+                  </Typography>
                 </Button>
-              </div>
+              </>
             }
           </Toolbar>
         </Container>
