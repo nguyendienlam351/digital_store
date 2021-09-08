@@ -15,7 +15,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        paddingTop: theme.spacing(3),
+        padding: theme.spacing(3,2),
     },
     grid: {
         padding: theme.spacing(3, 0),

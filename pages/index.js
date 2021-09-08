@@ -13,7 +13,7 @@ import Link from '@material-ui/core/Link'
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(1, 0, 4)
+    padding: theme.spacing(1, 2, 4)
   },
   grid: {
     margin: theme.spacing(2, 0),

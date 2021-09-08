@@ -16,7 +16,7 @@ import { useRouter } from 'next/router'
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(1, 0)
+    padding: theme.spacing(1, 2)
   },
   grid: {
     margin: theme.spacing(2, 0)
