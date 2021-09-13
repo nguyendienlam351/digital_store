@@ -4,20 +4,21 @@ import { useRouter } from 'next/router'
 import { getData } from '../../../lib/fetchData'
 import filterSearch from '../../../lib/filterSearch'
 import BillTable from '../../../components/BillTable'
-import Layout from '../../../components/Layout'
 import AdToolBar from '../../../components/AdToolBar'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
+import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import InputBase from '@material-ui/core/InputBase'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import ClearIcon from '@material-ui/icons/Clear'
+import withSession from '../../../lib/session'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
-        marginBottom: theme.spacing(3),
+        margin: theme.spacing(3,0),
     },
     search: {
         position: 'relative',
@@ -84,7 +85,7 @@ const Index = (props) => {
                 <title>Bills Manager</title>
             </Head>
             <AdToolBar select="Quản lý hóa đơn" />
-            <Layout>
+            <Container>
                 <Grid
                     container
                     direction="row"
@@ -128,12 +129,25 @@ const Index = (props) => {
                     handleLoadmore={handleLoadmore}
                     page={page}
                     length={props.length} />
-            </Layout>
+            </Container>
         </div>
     )
 }
 
-export async function getServerSideProps({ query }) {
+export const getServerSideProps = withSession(async (context) => {
+    const user = context.req.session.get('user')
+
+    if (!user) {
+        return {
+            redirect: {
+                destination: '/admin/login',
+                permanent: false,
+            },
+        }
+    }
+
+    const query = context.query || {}
+
     const page = query.page || 1
     const search = query.search || 'all'
 
@@ -147,6 +161,6 @@ export async function getServerSideProps({ query }) {
             length: resultBill.length,
         }
     }
-}
+})
 
 export default Index

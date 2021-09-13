@@ -2,9 +2,8 @@ import React from 'react'
 import Head from 'next/head'
 import AdToolBar from '../../../components/AdToolBar'
 import ProductForm from '../../../components/ProductForm'
-import Layout from '../../../components/Layout'
-import Type from '../../../models/Type'
-import dbConnect from '../../../lib/dbConnect'
+import { getData } from '../../../lib/fetchData'
+import withSession from '../../../lib/session'
 
 export default function New_Product({ types }) {
   const product = {
@@ -20,25 +19,26 @@ export default function New_Product({ types }) {
       <Head>
         <title>New Product</title>
       </Head>
-      <AdToolBar select="Quản lý sản phẩm"/>
-      <Layout>
+      <AdToolBar select="Quản lý sản phẩm" />
         <ProductForm types={types} product={product} isNew={true} />
-      </Layout>
     </div>
   )
 }
 
-export async function getServerSideProps() {
-  await dbConnect()
+export const getServerSideProps = withSession(async ({ req, res }) => {
+  const user = req.session.get('user')
 
-  /* find all the data in our database */
-  const resultType = await Type.find({})
-  const types = resultType.map((doc) => {
-    const type = doc.toObject()
-    type._id = type._id.toString()
-    return type
-  })
+  if (!user) {
+    return {
+      redirect: {
+        destination: '/admin/login',
+        permanent: false,
+      },
+    }
+  }
+  
+  const resultType = await getData('types?limit=all&name=all')
 
-  return { props: { types: types } }
-}
+  return { props: { types: resultType.types } }
+})
 

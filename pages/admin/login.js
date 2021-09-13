@@ -1,10 +1,7 @@
 import Head from 'next/head'
-import { useState, useContext, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useState, useContext } from 'react'
 import Image from 'next/image'
-import Cookie from 'js-cookie'
 import { DataContext } from '../../store/GlobalState'
-import { postData } from '../../lib/fetchData'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
@@ -12,12 +9,12 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import InputLabel from '@material-ui/core/InputLabel'
-import FormControl from '@material-ui/core/FormControl'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import fetchJson from '../../lib/fetchJson'
+import useUser from '../../lib/useUser'
+import withSession from '../../lib/session'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,17 +30,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
     const classes = useStyles();
-    const router = useRouter()
     const [showPassword, setShowPassword] = useState(false)
     const initialState = { user_name: '', password: '' }
     const [userData, setUserData] = useState(initialState)
     const { user_name, password } = userData
     const { state, dispatch } = useContext(DataContext)
-    const { auth } = state
 
-    useEffect(() => {
-        if (Object.keys(auth).length !== 0) router.push("/admin/products")
-    }, [auth, router])
+    const { mutateUser } = useUser({
+        redirectTo: '/admin/products',
+        redirectIfFound: true,
+    })
 
     const handleChange = (e) => {
         const target = e.target
@@ -54,26 +50,21 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
-        dispatch({ type: 'NOTIFY', payload: { loading: true } })
-        const res = await postData('auth/login', userData)
 
-        if (res.err) return dispatch({ type: 'NOTIFY', payload: { type: "error", message: "Đăng nhập không thành công" } })
-
-        dispatch({
-            type: 'AUTH', payload: {
-                token: res.access_token,
-                user: res.user
-            }
-        })
-
-        Cookie.set('refreshtoken', res.refresh_token, {
-            path: '/',
-            expires: 7
-        })
-
-        localStorage.setItem('firstLogin', true)
-
-        dispatch({ type: 'NOTIFY', payload: { message: "Đăng nhập thành công" } })
+        try {
+            mutateUser(
+                await fetchJson('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                    body: JSON.stringify(userData),
+                })
+            )
+        } catch (error) {
+            dispatch({ type: 'NOTIFY', payload: { type: "error", message: "Đăng nhập không thành công" } })
+        }
     }
 
     return (
@@ -121,7 +112,7 @@ const Login = () => {
                         onChange={handleChange}
                         type={showPassword ? 'text' : 'password'}
                         InputProps={{
-                            endAdornment: <InputAdornment posiFtion="end">
+                            endAdornment: <InputAdornment position="end">
                                 <IconButton
                                     onClick={() => { setShowPassword(!showPassword) }}
                                 >
@@ -130,12 +121,12 @@ const Login = () => {
                             </InputAdornment>,
                         }}
                     />
-                    <Button 
-                    className={classes.item}
-                    fullWidth 
-                    onClick={() => { handleLogin() }} 
-                    variant="contained" 
-                    color="primary">
+                    <Button
+                        className={classes.item}
+                        fullWidth
+                        onClick={() => { handleLogin() }}
+                        variant="contained"
+                        color="primary">
                         Đăng nhập
                     </Button>
                 </Grid>
@@ -143,5 +134,19 @@ const Login = () => {
         </div>
     )
 }
+
+export const getServerSideProps = withSession(async (context) => {
+    const user = context.req.session.get('user')
+
+    if (user) {
+        return {
+            redirect: {
+                destination: '/admin/products',
+                permanent: false,
+            },
+        }
+    }
+    return { props: {} }
+})
 
 export default Login

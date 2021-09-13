@@ -2,10 +2,10 @@ import React from 'react'
 import Head from 'next/head'
 import AdToolBar from '../../../components/AdToolBar'
 import ProductForm from '../../../components/ProductForm'
-import Layout from '../../../components/Layout'
 import { getData } from '../../../lib/fetchData'
 import Grid from '@material-ui/core/Grid'
 import RedeemIcon from '@material-ui/icons/Redeem'
+import withSession from '../../../lib/session'
 
 export default function Edit_Product({ types, product }) {
   return (
@@ -14,7 +14,6 @@ export default function Edit_Product({ types, product }) {
         <title>Edit Product</title>
       </Head>
       <AdToolBar select="Quản lý sản phẩm" />
-      <Layout>
         {product == null ?
           <Grid
             container
@@ -26,15 +25,26 @@ export default function Edit_Product({ types, product }) {
           :
           <ProductForm types={types} product={product} isNew={false} />
         }
-      </Layout>
     </div>
   )
 }
 
-export async function getServerSideProps({ params }) {
+export const getServerSideProps = withSession(async (context) => {
+  const user = context.req.session.get('user')
+
+  if (!user) {
+    return {
+      redirect: {
+        destination: '/admin/login',
+        permanent: false,
+      },
+    }
+  }
+  const { id } = context.params
+
   const resultType = await getData('types?limit=all&name=all')
-  const product = await getData(`products/${params.id}`)
+  const product = await getData(`products/${id}`)
 
   return { props: { types: resultType.types, product: product.data || null } }
-}
+})
 

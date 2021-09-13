@@ -27,7 +27,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        paddingTop: theme.spacing(3),
     },
     grid: {
         padding: theme.spacing(3, 0),

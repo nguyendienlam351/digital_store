@@ -5,29 +5,8 @@ import reducers from './Reducers'
 export const DataContext = createContext()
 
 export const DataProvider = ({ children }) => {
-    const initialState = {notify: {}, auth: {} , cart: []}
+    const initialState = {notify: {}, cart: []}
     const [state, dispatch] = useReducer(reducers, initialState)
-
-    const getUser = async () =>{
-        await getData('auth/accessToken').then(res => {
-            if(res.err) return localStorage.removeItem("firstLogin")
-            
-            dispatch({ 
-                type: "AUTH",
-                payload: {
-                    token: res.access_token,
-                    user: res.user
-                }
-            })
-        })
-    }
-
-    useEffect(() => {
-        const firstLogin = localStorage.getItem("firstLogin");
-        if(firstLogin){
-            getUser()
-        }
-    },[])
 
     useEffect(() => {
         const local_cart = JSON.parse(localStorage.getItem('local_cart'))

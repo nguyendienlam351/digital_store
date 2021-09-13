@@ -3,20 +3,21 @@ import Head from 'next/head'
 import AdToolBar from '../../../components/AdToolBar'
 import BillDetailTable from '../../../components/BillDetailTable'
 import BillDetail from '../../../components/BillDetail'
-import Layout from '../../../components/Layout'
+import Container from '@material-ui/core/Container'
 import { getData } from '../../../lib/fetchData'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import RedeemIcon from '@material-ui/icons/Redeem'
+import withSession from '../../../lib/session'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
-        marginBottom: theme.spacing(3),
+        margin: theme.spacing(3,0),
     },
 }));
 
 export default function BillDetails({ bill }) {
-    const classes = useStyles();
+    const classes = useStyles()
 
     return (
         <div>
@@ -24,7 +25,7 @@ export default function BillDetails({ bill }) {
                 <title>Bill Details</title>
             </Head>
             <AdToolBar select="Quản lý đơn hàng" />
-            <Layout>
+            <Container>
                 {bill == null ?
                     <Grid
                         container
@@ -41,14 +42,26 @@ export default function BillDetails({ bill }) {
                         <BillDetailTable product={bill.product} />
                     </>
                 }
-            </Layout>
+            </Container>
         </div>
     )
 }
 
-export async function getServerSideProps({ params }) {
-    const bill = await getData(`bills/${params.id}`)
+export const getServerSideProps = withSession(async (context) => {
+    const user = context.req.session.get('user')
+
+    if (!user) {
+        return {
+            redirect: {
+                destination: '/admin/login',
+                permanent: false,
+            },
+        }
+    }
+
+    const { id } = context.params
+    const bill = await getData(`bills/${id}`)
 
     return { props: { bill: bill.data || null } }
-}
+})
 

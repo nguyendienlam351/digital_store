@@ -12,12 +12,14 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Link from '@material-ui/core/Link'
+import Container from '@material-ui/core/Container'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
         display: 'flex',
         justifyContent: 'space-between',
-        width: '100%'
+        width: '100%',
+        margin: theme.spacing(3,0),
     },
     textField: {
         margin: theme.spacing(1,0),
@@ -146,7 +148,7 @@ export default function ProductForm({ types, product, isNew }) {
     };
 
     return (
-        <div>
+        <Container>
             <Grid
                 className={classes.grid}
                 container
@@ -243,6 +245,6 @@ export default function ProductForm({ types, product, isNew }) {
                     {isNew ? "Thêm mới" : "Thay đổi"}
                 </Button>
             </div>
-        </div>
+        </Container>
     )
 }

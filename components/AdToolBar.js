@@ -1,8 +1,6 @@
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
-import { DataContext } from '../store/GlobalState'
 import clsx from 'clsx'
-import Cookie from 'js-cookie'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import { alpha, makeStyles } from '@material-ui/core/styles'
@@ -13,6 +11,9 @@ import Button from '@material-ui/core/Button'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Link from '@material-ui/core/Link'
+import useUser from '../lib/useUser'
+import Router from 'next/router'
+import fetchJson from '../lib/fetchJson'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,17 +40,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AdToolBar({ select }) {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const classes = useStyles()
+  const [anchorEl, setAnchorEl] = useState(null)
+  const { user, mutateUser } = useUser()
 
-  const { state, dispatch } = useContext(DataContext)
-  const { auth } = state
-
-  const handleLogout = () => {
-    Cookie.remove('refreshtoken', { path: '/' })
-    localStorage.removeItem('firstLogin')
-    dispatch({ type: 'AUTH', payload: {} })
+  const handleLogout = async () => {
+    mutateUser(
+      await fetchJson('/api/auth/logout', { method: 'POST' }),
+      false
+    )
+    Router.push('/admin/login')
   }
+  
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -77,51 +79,40 @@ export default function AdToolBar({ select }) {
               </Typography>
             </Link>
             <div className={classes.root} />
-            {Object.keys(auth).length == 0 ?
-              <Button
-                className={clsx(classes.button, classes.menuButton)}>
-                <Link component="a" color="inherit" href="/admin/login" noWrap>
-                  Đăng nhập
+            <Button className={clsx(classes.button, classes.menuButton)} onClick={handleClick}>
+              <Typography variant="button" noWrap>
+                {select}
+              </Typography>
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem>
+                <Link component="a" color="inherit" href="/admin/products" noWrap>
+                  Quản lý sản phẩm
                 </Link>
-              </Button>
-              :
-              <>
-                <Button className={clsx(classes.button, classes.menuButton)} onClick={handleClick}>
-                  <Typography variant="button" noWrap>
-                    {select}
-                  </Typography>
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem>
-                    <Link component="a" color="inherit" href="/admin/products" noWrap>
-                      Quản lý sản phẩm
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link component="a" color="inherit" href="/admin/types" noWrap>
-                      Quản lý loại sản phẩm
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link component="a" color="inherit" href="/admin/bills" noWrap>
-                      Quản lý đơn hàng
-                    </Link>
-                  </MenuItem>
-                </Menu>
-                <Button
-                  className={clsx(classes.button, classes.menuButton)}
-                  onClick={() => handleLogout()}>
-                  <Typography variant="button" noWrap>
-                    Đăng xuất
-                  </Typography>
-                </Button>
-              </>
-            }
+              </MenuItem>
+              <MenuItem>
+                <Link component="a" color="inherit" href="/admin/types" noWrap>
+                  Quản lý loại sản phẩm
+                </Link>
+              </MenuItem>
+              <MenuItem>
+                <Link component="a" color="inherit" href="/admin/bills" noWrap>
+                  Quản lý đơn hàng
+                </Link>
+              </MenuItem>
+            </Menu>
+            <Button
+              className={clsx(classes.button, classes.menuButton)}
+              onClick={() => handleLogout()}>
+              <Typography variant="button" noWrap>
+                Đăng xuất
+              </Typography>
+            </Button>
           </Toolbar>
         </Container>
       </AppBar>
